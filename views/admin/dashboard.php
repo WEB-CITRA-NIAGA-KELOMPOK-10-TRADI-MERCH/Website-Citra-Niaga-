@@ -318,6 +318,13 @@ if ($query_traffic_pages) {
                             </div>
                             <i data-lucide="chevron-right" class="w-4 h-4"></i>
                         </a>
+
+                        <a href="settings.php" class="flex items-center justify-between p-4 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-slate-100 transition text-slate-700 font-semibold text-sm">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="settings" class="w-5 h-5 text-slate-500"></i> Pengaturan Web
+                            </div>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </a>
                     </div>
                 </div>
 

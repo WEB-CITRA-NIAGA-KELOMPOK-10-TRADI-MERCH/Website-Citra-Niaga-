@@ -8,18 +8,55 @@ $kiosModel = new KiosModel($conn);
 $kios = $kiosModel->getAllKios();
 
 $groupedKios = [];
-while($row = mysqli_fetch_assoc($kios)) {
-    $type = $row['business_type'];
-    if (!isset($groupedKios[$type])) {
-        $groupedKios[$type] = [];
+// PELINDUNG ANTI-ERROR PHP & PENGELOMPOKAN DINAMIS (BISA CMS)
+if ($kios && mysqli_num_rows($kios) > 0) {
+    while($row = mysqli_fetch_assoc($kios)) {
+        // Ambil jenis bisnis, kalau kosong kasih default 'Lainnya'
+        $type = !empty($row['business_type']) ? trim($row['business_type']) : 'Lainnya';
+        if (!isset($groupedKios[$type])) {
+            $groupedKios[$type] = [];
+        }
+        $groupedKios[$type][] = $row;
     }
-    $groupedKios[$type][] = $row;
 }
 
 require_once 'templates/header.php'; 
 ?>
 
+<style>
+    /* Lightbox Styles Anti-Freeze */
+    #custom-lightbox {
+        display: none; 
+        background-color: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(5px);
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .lightbox-img {
+        max-height: 85vh;
+        max-width: 90vw;
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        transform: scale(0.9);
+        transition: transform 0.3s ease;
+    }
+    .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+</style>
+
 <main class="w-full pt-20 pb-20 bg-[#fafafa] font-plus-jakarta-sans min-h-screen">
+    
+    <div id="custom-lightbox" class="fixed top-0 left-0 w-full h-full flex-col items-center justify-center">
+        <button id="close-lightbox" class="absolute top-4 right-4 p-2 bg-transparent border-0 text-white opacity-75 hover:opacity-100 transition-opacity" style="cursor: pointer; z-index: 10000;">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <img id="lightbox-img" src="" class="lightbox-img rounded-xl object-contain">
+        <div class="text-center mt-6 px-4" style="max-width: 800px;" onclick="event.stopPropagation()">
+            <h3 id="lightbox-title" class="font-cinzel font-bold text-white text-2xl mb-2 tracking-wider"></h3>
+            <p id="lightbox-desc" class="text-white/70 text-base md:text-lg m-0"></p>
+        </div>
+    </div>
+
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
         
         <div class="text-center max-w-3xl mx-auto mb-16 fade-in-up">
@@ -33,7 +70,7 @@ require_once 'templates/header.php';
             </button>
             <?php foreach(array_keys($groupedKios) as $cat): ?>
                 <button class="filter-btn px-6 py-2.5 rounded-full border-2 border-gray-200 bg-white text-gray-600 font-bold hover:border-[#254794] hover:text-[#254794] transition-all" data-filter="<?= htmlspecialchars($cat) ?>">
-                    <?= htmlspecialchars($cat) ?>
+                    <?= ucwords(str_replace('_', ' ', htmlspecialchars($cat))) ?>
                 </button>
             <?php endforeach; ?>
         </div>
@@ -44,30 +81,32 @@ require_once 'templates/header.php';
                     
                     <div class="flex items-center gap-4 mb-8 fade-in-up">
                         <h2 class="font-cinzel text-2xl font-bold text-gray-900 uppercase tracking-widest">
-                            <?= htmlspecialchars($businessType) ?>
+                            <?= ucwords(str_replace('_', ' ', htmlspecialchars($businessType))) ?>
                         </h2>
                         <div class="h-px bg-gray-300 flex-grow"></div>
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         <?php foreach($items as $item): ?>
-                        <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300 flex flex-col h-full fade-in-up group">
+                        <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300 flex flex-col h-full fade-in-up group hover-lift">
                             
-                            <div class="relative h-56 w-full bg-gray-100 overflow-hidden">
-                                <?php
-                                    $imagePath = !empty($item['image']) ? $item['image'] : '../assets/img/Gallery_Lainnya/area_pengunjung.png';
-                                ?>
+                            <?php $imagePath = !empty($item['image']) ? $item['image'] : '../assets/img/default-placeholder.png'; ?>
+                            <div class="relative h-56 w-full bg-gray-100 overflow-hidden cursor-pointer" onclick="openBox('<?= htmlspecialchars($imagePath, ENT_QUOTES) ?>', '<?= htmlspecialchars($item['name'], ENT_QUOTES) ?>', '<?= htmlspecialchars($item['description'], ENT_QUOTES) ?>')">
                                 <img src="<?= htmlspecialchars($imagePath) ?>" onerror="this.onerror=null;this.src='../assets/img/default-placeholder.png';" alt="<?= htmlspecialchars($item['name']) ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                                 
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-70"></div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                 
-                                <div class="absolute top-4 right-4 px-4 py-1.5 bg-white/90 backdrop-blur-sm text-[#254794] text-xs font-bold rounded-full shadow-sm uppercase tracking-wider">
-                                    <?= htmlspecialchars($item['business_type']) ?>
+                                <div class="absolute top-4 right-4 px-4 py-1.5 bg-white/90 backdrop-blur-sm text-[#254794] text-xs font-bold rounded-full shadow-sm uppercase tracking-wider z-10">
+                                    <?= ucwords(str_replace('_', ' ', htmlspecialchars($item['business_type']))) ?>
+                                </div>
+
+                                <div class="absolute bottom-4 left-4 w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 z-10" style="color: #254794;">
+                                    <i data-lucide="maximize-2" class="w-5 h-5"></i>
                                 </div>
                             </div>
 
                             <div class="p-6 flex flex-col flex-grow relative">
-                                <div class="absolute -top-8 right-6 w-12 h-12 bg-[#254794] text-white rounded-full flex items-center justify-center shadow-lg border-4 border-white">
+                                <div class="absolute -top-8 right-6 w-12 h-12 bg-[#254794] text-white rounded-full flex items-center justify-center shadow-lg border-4 border-white z-20">
                                     <i data-lucide="store" class="w-5 h-5"></i>
                                 </div>
 
@@ -139,7 +178,40 @@ require_once 'templates/header.php';
             });
         });
     });
+
+    // LIGHTBOX LOGIC NATIVE ENTENG
+    const lightbox = document.getElementById('custom-lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxTitle = document.getElementById('lightbox-title');
+    const lightboxDesc = document.getElementById('lightbox-desc');
+
+    function openBox(img, title, desc) {
+        lightboxImg.src = img;
+        lightboxTitle.textContent = title;
+        lightboxDesc.textContent = desc;
+        
+        lightbox.style.setProperty('display', 'flex', 'important');
+        setTimeout(() => {
+            lightbox.style.opacity = '1';
+            lightboxImg.style.transform = 'scale(1)';
+        }, 10);
+        document.body.style.overflow = 'hidden'; 
+    }
+
+    function closeBox() {
+        lightbox.style.opacity = '0';
+        lightboxImg.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+            lightbox.style.setProperty('display', 'none', 'important');
+            document.body.style.overflow = ''; 
+        }, 300);
+    }
+
+    document.getElementById('close-lightbox').addEventListener('click', closeBox);
+    lightbox.addEventListener('click', function(e) {
+        if(e.target === lightbox) { closeBox(); }
+    });
 </script>
 
-<script src="../assets/js/main.js"></script>
+<script src="../assets/js/main.js?v=<?= time() ?>"></script>
 <?php require_once 'templates/footer.php'; ?>

@@ -28,22 +28,54 @@ $histories = $historyModel->getAllHistory();
 </head>
 <body class="bg-gray-50 flex h-screen overflow-hidden">
     
-    <aside class="w-64 bg-[#1a2b4d] text-white flex flex-col shrink-0">
-        <div class="p-6 border-b border-white/10 flex items-center gap-3">
-            <div class="p-2 bg-white/10 rounded-lg"><i data-lucide="map-pin"></i></div>
-            <div><h1 class="font-bold tracking-wider">CITRA NIAGA</h1><p class="text-xs text-gray-400">Admin Portal</p></div>
+    <?php $admin_page = basename($_SERVER['PHP_SELF']); ?>
+    <aside class="w-64 bg-[#1e293b] text-slate-300 flex flex-col h-full shrink-0 shadow-xl z-20">
+        <div class="p-6 flex items-center gap-3">
+            <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-white">
+                <i data-lucide="map-pin" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-white tracking-wide uppercase">CITRA NIAGA</h1>
+                <p class="text-[10px] text-slate-400">Admin Portal</p>
+            </div>
         </div>
-        <nav class="flex-1 px-4 py-6 space-y-2">
-            <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white/5 hover:text-white"><i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard</a>
-            <a href="gallery.php" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white/5 hover:text-white"><i data-lucide="image" class="w-5 h-5"></i> Kelola Galeri</a>
-            <a href="history.php" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-blue-600 text-white"><i data-lucide="book-open" class="w-5 h-5"></i> Kelola Sejarah</a>
-            <a href="kios.php" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white/5 hover:text-white"><i data-lucide="store" class="w-5 h-5"></i> Kelola Kios</a>
-            <a href="reviews.php" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white/5 hover:text-white"><i data-lucide="message-square" class="w-5 h-5"></i> Kelola Review</a>
-            
-            <a href="settings.php" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white/5 hover:text-white"><i data-lucide="settings" class="w-5 h-5"></i> Pengaturan Web</a>
+
+        <nav class="flex-1 px-4 py-4 space-y-2">
+            <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'dashboard.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                <span class="text-sm font-medium">Dashboard</span>
+            </a>
+            <a href="gallery.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'gallery.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+                <i data-lucide="image" class="w-5 h-5"></i>
+                <span class="text-sm font-medium">Kelola Galeri</span>
+            </a>
+            <a href="history.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'history.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+                <i data-lucide="book-open" class="w-5 h-5"></i>
+                <span class="text-sm font-medium">Kelola Sejarah</span>
+            </a>
+            <a href="kios.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'kios.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+                <i data-lucide="store" class="w-5 h-5"></i>
+                <span class="text-sm font-medium">Kelola Kios</span>
+            </a>
+            <a href="events.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'events.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+                <i data-lucide="calendar" class="w-5 h-5"></i>
+                <span class="text-sm font-medium">Kelola Acara</span>
+            </a>
+            <a href="reviews.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'reviews.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+                <i data-lucide="message-square" class="w-5 h-5"></i>
+                <span class="text-sm font-medium">Kelola Ulasan</span>
+            </a>
+            <a href="settings.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'settings.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                <span class="text-sm font-medium">Pengaturan Web</span>
+            </a>
         </nav>
-        <div class="p-4 border-t border-white/10">
-            <a href="../../controllers/AuthController.php?logout=true" class="flex items-center gap-3 px-4 py-3 rounded-lg text-red-400 hover:bg-white/5"><i data-lucide="log-out" class="w-5 h-5"></i> Logout</a>
+
+        <div class="p-4 mt-auto border-t border-slate-700/50">
+            <a href="../../controllers/AuthController.php?logout=true" class="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-400/10 rounded-xl transition font-medium">
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+                <span class="text-sm">Logout</span>
+            </a>
         </div>
     </aside>
 

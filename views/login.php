@@ -30,7 +30,7 @@ if (strpos($referer, 'login.php') !== false || strpos($referer, 'register.php') 
         <div class="absolute inset-0 bg-[url('../assets/img/login-bg.jpg')] opacity-20 bg-cover bg-center mix-blend-overlay"></div>
         
         <div class="relative z-10 w-full max-w-md text-center">
-            <div class="mx-auto w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-sm border border-white/20">
+            <div class="mx-auto w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-sm border border-white/20 shadow-sm">
                 <i data-lucide="map-pin" class="w-10 h-10 text-white"></i>
             </div>
             <h1 class="font-cinzel text-4xl font-bold mb-2 tracking-wider">CITRA NIAGA</h1>
@@ -62,15 +62,15 @@ if (strpos($referer, 'login.php') !== false || strpos($referer, 'register.php') 
             
             <?php if(isset($_GET['error'])): ?>
             <div class="bg-red-50 text-red-600 p-4 rounded-xl mb-6 flex items-center gap-3 border border-red-100 shadow-sm">
-                <i data-lucide="alert-circle" class="w-5 h-5"></i>
-                <span class="text-sm font-medium">Username atau Password salah!</span>
+                <i data-lucide="alert-circle" class="w-5 h-5 shrink-0"></i>
+                <span class="text-sm font-medium">Email atau Password salah!</span>
             </div>
             <?php endif; ?>
 
             <?php if(isset($_GET['success']) && $_GET['success'] == 'registered'): ?>
             <div class="bg-green-50 text-green-600 p-4 rounded-xl mb-6 flex items-center gap-3 border border-green-100 shadow-sm">
-                <i data-lucide="check-circle" class="w-5 h-5"></i>
-                <span class="text-sm font-medium">Akun berhasil dibuat! Silakan login.</span>
+                <i data-lucide="check-circle" class="w-5 h-5 shrink-0"></i>
+                <span class="text-sm font-medium">Akun berhasil dibuat! Silakan masuk menggunakan Email.</span>
             </div>
             <?php endif; ?>
 
@@ -84,12 +84,12 @@ if (strpos($referer, 'login.php') !== false || strpos($referer, 'register.php') 
                 <input type="hidden" name="redirect_url" value="<?php echo htmlspecialchars($referer); ?>">
 
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Username / Email</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email Terdaftar</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <i data-lucide="user" class="w-5 h-5 text-gray-400"></i>
+                            <i data-lucide="mail" class="w-5 h-5 text-gray-400"></i>
                         </div>
-                        <input type="text" name="username" class="w-full pl-11 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#254794] focus:border-transparent outline-none transition" placeholder="Masukkan username" required>
+                        <input type="email" name="email" class="w-full pl-11 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#254794] focus:border-transparent outline-none transition" placeholder="nama@email.com" required>
                     </div>
                 </div>
 

@@ -26,21 +26,54 @@ $galleries = $galleryModel->getAllGallery();
 </head>
 <body class="bg-gray-50 flex h-screen overflow-hidden">
     
-    <aside class="w-64 bg-[#1a2b4d] text-white flex flex-col shrink-0">
-        <div class="p-6 border-b border-white/10 flex items-center gap-3">
-            <div class="p-2 bg-white/10 rounded-lg"><i data-lucide="map-pin"></i></div>
-            <div><h1 class="font-bold tracking-wider">CITRA NIAGA</h1><p class="text-xs text-gray-400">Admin Portal</p></div>
+    <?php $admin_page = basename($_SERVER['PHP_SELF']); ?>
+    <aside class="w-64 bg-[#1e293b] text-slate-300 flex flex-col h-full shrink-0 shadow-xl z-20">
+        <div class="p-6 flex items-center gap-3">
+            <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-white">
+                <i data-lucide="map-pin" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-white tracking-wide uppercase">CITRA NIAGA</h1>
+                <p class="text-[10px] text-slate-400">Admin Portal</p>
+            </div>
         </div>
-        <nav class="flex-1 px-4 py-6 space-y-2">
-            <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white/5 hover:text-white"><i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard</a>
-            <a href="gallery.php" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-blue-600 text-white"><i data-lucide="image" class="w-5 h-5"></i> Kelola Galeri</a>
-            <a href="history.php" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white/5 hover:text-white"><i data-lucide="book-open" class="w-5 h-5"></i> Kelola Sejarah</a>
-            <a href="kios.php" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white/5 hover:text-white"><i data-lucide="store" class="w-5 h-5"></i> Kelola Kios</a>
-            <a href="reviews.php" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white/5 hover:text-white"><i data-lucide="message-square" class="w-5 h-5"></i> Kelola Review</a>
-            <a href="settings.php" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white/5 hover:text-white"><i data-lucide="settings" class="w-5 h-5"></i> Pengaturan Web</a>
+
+        <nav class="flex-1 px-4 py-4 space-y-2">
+            <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'dashboard.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                <span class="text-sm font-medium">Dashboard</span>
+            </a>
+            <a href="gallery.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'gallery.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+                <i data-lucide="image" class="w-5 h-5"></i>
+                <span class="text-sm font-medium">Kelola Galeri</span>
+            </a>
+            <a href="history.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'history.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+                <i data-lucide="book-open" class="w-5 h-5"></i>
+                <span class="text-sm font-medium">Kelola Sejarah</span>
+            </a>
+            <a href="kios.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'kios.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+                <i data-lucide="store" class="w-5 h-5"></i>
+                <span class="text-sm font-medium">Kelola Kios</span>
+            </a>
+            <a href="events.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'events.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+                <i data-lucide="calendar" class="w-5 h-5"></i>
+                <span class="text-sm font-medium">Kelola Acara</span>
+            </a>
+            <a href="reviews.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'reviews.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+                <i data-lucide="message-square" class="w-5 h-5"></i>
+                <span class="text-sm font-medium">Kelola Ulasan</span>
+            </a>
+            <a href="settings.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'settings.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                <span class="text-sm font-medium">Pengaturan Web</span>
+            </a>
         </nav>
-        <div class="p-4 border-t border-white/10">
-            <a href="../../controllers/AuthController.php?logout=true" class="flex items-center gap-3 px-4 py-3 rounded-lg text-red-400 hover:bg-white/5"><i data-lucide="log-out" class="w-5 h-5"></i> Logout</a>
+
+        <div class="p-4 mt-auto border-t border-slate-700/50">
+            <a href="../../controllers/AuthController.php?logout=true" class="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-400/10 rounded-xl transition font-medium">
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+                <span class="text-sm">Logout</span>
+            </a>
         </div>
     </aside>
 
@@ -52,7 +85,7 @@ $galleries = $galleryModel->getAllGallery();
         <div class="p-8 max-w-6xl mx-auto">
             
             <?php if(isset($_GET['success'])): ?>
-            <div class="bg-green-50 text-green-700 p-4 rounded-lg mb-6 flex items-center gap-2 border border-green-200">
+            <div id="notification-alert" class="bg-green-50 text-green-700 p-4 rounded-lg mb-6 flex items-center gap-2 border border-green-200">
                 <i data-lucide="check-circle" class="w-5 h-5"></i> Aksi berhasil dilakukan!
             </div>
             <?php endif; ?>
@@ -62,7 +95,7 @@ $galleries = $galleryModel->getAllGallery();
                     <i data-lucide="plus-circle" class="text-blue-600"></i>
                     <h3 class="font-bold text-gray-800">Tambah Foto Baru</h3>
                 </div>
-                <form action="../../controllers/GalleryController.php" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <form action="../../controllers/GalleryController.php" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="text-sm font-semibold text-gray-600 mb-1 block">Judul Foto</label>
                         <input type="text" name="title" placeholder="Misal: Suasana Malam Citra Niaga" class="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 outline-none" required>
@@ -70,20 +103,14 @@ $galleries = $galleryModel->getAllGallery();
                     
                     <div>
                         <label class="text-sm font-semibold text-gray-600 mb-1 block">Kategori</label>
-                        <select name="category" class="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 outline-none" required>
-                            <option value="">Pilih Kategori...</option>
-                            <option value="Area">Area</option>
-                            <option value="Fasilitas Umum">Fasilitas Umum</option>
-                            <option value="Kuliner">Kuliner</option>
-                            <option value="Pertokoan">Pertokoan</option>
-                            <option value="Event">Event</option>
-                            <option value="Budaya">Budaya</option>
-                        </select>
-                    </div>
-
-                    <div class="md:col-span-2">
-                        <label class="text-sm font-semibold text-gray-600 mb-1 block">Nama File / URL Gambar</label>
-                        <input type="text" name="image_url" placeholder="Misal: gerbang.jpg atau ../assets/img/gerbang.jpg" class="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 outline-none" required>
+                        <input list="category_types" name="category" placeholder="Pilih / Ketik Kategori Baru" class="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 outline-none" required>
+                        <datalist id="category_types">
+                            <option value="Area_Bangunan">
+                            <option value="Fasilitas_Umum">
+                            <option value="Kuliner">
+                            <option value="Event">
+                            <option value="Lainnya">
+                        </datalist>
                     </div>
 
                     <div class="md:col-span-2">
@@ -91,10 +118,42 @@ $galleries = $galleryModel->getAllGallery();
                         <textarea name="description" placeholder="Deskripsi foto ini..." rows="3" class="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
                     </div>
 
-                    <button type="submit" name="tambah" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 w-fit flex items-center gap-2 transition-colors">
-                        <i data-lucide="save" class="w-4 h-4"></i> Simpan Foto
-                    </button>
+                    <div class="md:col-span-2">
+                        <label class="text-sm font-semibold text-gray-600 mb-2 block">Upload Foto Galeri (Maks 1MB)</label>
+                        <div class="relative mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-colors group cursor-pointer" onclick="document.getElementById('file-upload').click()">
+                            <div class="space-y-1 text-center">
+                                <i data-lucide="upload-cloud" class="mx-auto h-12 w-12 text-gray-400 group-hover:text-blue-500 transition-colors"></i>
+                                <div class="flex text-sm text-gray-600 justify-center">
+                                    <span class="relative font-medium text-blue-600 focus-within:outline-none">
+                                        <span>Klik untuk pilih foto dari File Explorer</span>
+                                        <input id="file-upload" name="image" type="file" class="sr-only" accept="image/jpeg, image/png, image/webp" required>
+                                    </span>
+                                </div>
+                                <p class="text-xs text-gray-500">Hanya PNG, JPG, JPEG, WEBP (Max 1MB)</p>
+                                <p id="file-name-display" class="text-sm font-bold text-green-600 mt-2"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-2 flex justify-end pt-4">
+                        <button type="submit" name="tambah" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 flex items-center gap-2 transition-colors shadow-md">
+                            <i data-lucide="save" class="w-5 h-5"></i> Simpan Foto
+                        </button>
+                    </div>
                 </form>
+            </div>
+
+            <div class="flex items-center gap-3 mb-4 mt-8">
+                <i data-lucide="filter" class="w-5 h-5 text-gray-400"></i>
+                <h3 class="font-bold text-gray-700">Filter Data</h3>
+            </div>
+            <div class="flex flex-wrap gap-2 mb-6" id="filter-container">
+                <button onclick="filterGallery('all', this)" class="filter-btn px-5 py-2.5 rounded-full text-sm font-bold bg-blue-600 text-white shadow-sm border border-blue-600 transition-all">Semua Kategori</button>
+                <button onclick="filterGallery('Event', this)" class="filter-btn px-5 py-2.5 rounded-full text-sm font-bold bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition-all">Event</button>
+                <button onclick="filterGallery('Kuliner', this)" class="filter-btn px-5 py-2.5 rounded-full text-sm font-bold bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition-all">Kuliner</button>
+                <button onclick="filterGallery('Fasilitas_Umum', this)" class="filter-btn px-5 py-2.5 rounded-full text-sm font-bold bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition-all">Fasilitas Umum</button>
+                <button onclick="filterGallery('Area_Bangunan', this)" class="filter-btn px-5 py-2.5 rounded-full text-sm font-bold bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition-all">Area Bangunan</button>
+                <button onclick="filterGallery('Lainnya', this)" class="filter-btn px-5 py-2.5 rounded-full text-sm font-bold bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition-all">Lainnya</button>
             </div>
 
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -107,27 +166,38 @@ $galleries = $galleryModel->getAllGallery();
                             <th class="p-4 font-semibold text-gray-600 text-sm text-right">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="gallery-tbody">
                         <?php 
                         if(mysqli_num_rows($galleries) > 0): 
                             while($row = mysqli_fetch_assoc($galleries)): 
                         ?>
-                        <tr class="border-b hover:bg-gray-50/50 transition-colors">
+                        <tr class="gallery-row border-b hover:bg-gray-50/50 transition-colors" data-category="<?= htmlspecialchars($row['category']) ?>">
                             <td class="p-4">
-                                <img src="<?= htmlspecialchars($row['image']) ?>" onerror="this.onerror=null;this.src='../../assets/img/default-placeholder.png';" alt="Img" class="w-16 h-16 object-cover rounded-lg shadow-sm border border-gray-200">
+                                <?php 
+                                // FIX PATH: Merubah path ../assets jadi ../../assets otomatis
+                                $db_img = !empty($row['image']) ? $row['image'] : '';
+                                $display_img = $db_img ? str_replace('../assets', '../../assets', $db_img) : '../../assets/img/default-placeholder.png';
+                                ?>
+                                <img src="<?= htmlspecialchars($display_img) ?>" onerror="this.onerror=null;this.src='../../assets/img/default-placeholder.png';" alt="Img" class="w-16 h-16 object-cover rounded-lg shadow-sm border border-gray-200">
                             </td>
                             <td class="p-4">
                                 <p class="font-bold text-gray-800"><?= htmlspecialchars($row['title']) ?></p>
                                 <p class="text-xs text-gray-500 mt-1 line-clamp-2"><?= htmlspecialchars($row['description']) ?></p>
                             </td>
                             <td class="p-4">
-                                <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-semibold border border-blue-100">
-                                    <?= htmlspecialchars($row['category']) ?>
+                                <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-bold border border-blue-100">
+                                    <?= ucwords(str_replace('_', ' ', htmlspecialchars($row['category']))) ?>
                                 </span>
                             </td>
                             <td class="p-4 text-right">
                                 <div class="flex items-center justify-end gap-2">
-                                    <button onclick="openEditModal(<?= $row['id'] ?>, '<?= htmlspecialchars(addslashes($row['title'])) ?>', '<?= htmlspecialchars(addslashes($row['category'])) ?>', '<?= htmlspecialchars(addslashes($row['image'])) ?>', '<?= htmlspecialchars(addslashes($row['description'])) ?>')" class="p-2 bg-yellow-50 text-yellow-600 hover:bg-yellow-100 rounded-lg transition-colors" title="Edit">
+                                    <button onclick="openEditModal(
+                                        <?= $row['id'] ?>, 
+                                        '<?= htmlspecialchars(addslashes($row['title'])) ?>', 
+                                        '<?= htmlspecialchars(addslashes($row['category'])) ?>', 
+                                        '<?= htmlspecialchars(addslashes($row['description'])) ?>',
+                                        '<?= htmlspecialchars(addslashes($row['image'])) ?>'
+                                    )" class="p-2 bg-yellow-50 text-yellow-600 hover:bg-yellow-100 rounded-lg transition-colors" title="Edit">
                                         <i data-lucide="edit-3" class="w-4 h-4"></i>
                                     </button>
                                     
@@ -156,7 +226,7 @@ $galleries = $galleryModel->getAllGallery();
     </main>
 
     <div id="editModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl scale-95 transition-transform duration-300" id="modalContent">
+        <div class="bg-white rounded-2xl w-full max-w-2xl shadow-2xl scale-95 transition-transform duration-300" id="modalContent">
             <div class="flex justify-between items-center p-6 border-b border-gray-100">
                 <h3 class="font-bold text-lg text-gray-800">Edit Data Galeri</h3>
                 <button onclick="closeEditModal()" class="text-gray-400 hover:text-red-500 transition-colors">
@@ -164,10 +234,9 @@ $galleries = $galleryModel->getAllGallery();
                 </button>
             </div>
             
-            <form action="../../controllers/GalleryController.php" method="POST" class="p-6">
+            <form action="../../controllers/GalleryController.php" method="POST" enctype="multipart/form-data" class="p-6">
                 <input type="hidden" name="id" id="edit_id">
-                
-                <div class="space-y-4">
+                <input type="hidden" name="old_image" id="edit_old_image"> <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="text-sm font-semibold text-gray-600 mb-1 block">Judul Foto</label>
                         <input type="text" name="title" id="edit_title" class="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 outline-none" required>
@@ -175,24 +244,35 @@ $galleries = $galleryModel->getAllGallery();
                     
                     <div>
                         <label class="text-sm font-semibold text-gray-600 mb-1 block">Kategori</label>
-                        <select name="category" id="edit_category" class="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 outline-none" required>
-                            <option value="Area">Area</option>
-                            <option value="Fasilitas Umum">Fasilitas Umum</option>
-                            <option value="Kuliner">Kuliner</option>
-                            <option value="Pertokoan">Pertokoan</option>
-                            <option value="Event">Event</option>
-                            <option value="Budaya">Budaya</option>
-                        </select>
+                        <input list="edit_category_types" name="category" id="edit_category" class="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 outline-none" required>
+                        <datalist id="edit_category_types">
+                            <option value="Area_Bangunan">
+                            <option value="Fasilitas_Umum">
+                            <option value="Kuliner">
+                            <option value="Event">
+                            <option value="Lainnya">
+                        </datalist>
                     </div>
 
-                    <div>
-                        <label class="text-sm font-semibold text-gray-600 mb-1 block">Nama File / URL Gambar</label>
-                        <input type="text" name="image_url" id="edit_image_url" class="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 outline-none" required>
-                    </div>
-
-                    <div>
+                    <div class="md:col-span-2">
                         <label class="text-sm font-semibold text-gray-600 mb-1 block">Deskripsi Singkat</label>
                         <textarea name="description" id="edit_description" rows="3" class="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                    </div>
+
+                    <div class="md:col-span-2 mt-2">
+                        <label class="text-sm font-semibold text-gray-600 mb-2 block">Upload Foto Baru (Maks 1MB) <span class="text-xs text-gray-400 font-normal">(Kosongkan jika tidak ingin ganti foto)</span></label>
+                        <div class="relative mt-1 flex justify-center px-6 pt-4 pb-5 border-2 border-gray-300 border-dashed rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-colors group cursor-pointer" onclick="document.getElementById('edit-file-upload').click()">
+                            <div class="space-y-1 text-center">
+                                <i data-lucide="image-plus" class="mx-auto h-8 w-8 text-gray-400 group-hover:text-blue-500 transition-colors"></i>
+                                <div class="flex text-sm text-gray-600 justify-center">
+                                    <span class="relative font-medium text-blue-600 focus-within:outline-none">
+                                        <span>Klik untuk pilih foto dari File Explorer</span>
+                                        <input id="edit-file-upload" name="image" type="file" class="sr-only" accept="image/jpeg, image/png, image/webp">
+                                    </span>
+                                </div>
+                                <p id="edit-file-name-display" class="text-sm font-bold text-green-600 mt-2"></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -209,12 +289,92 @@ $galleries = $galleryModel->getAllGallery();
     <script>
         lucide.createIcons();
 
-        function openEditModal(id, title, category, imageUrl, description) {
+        // FUNGSI FILTER KATEGORI REAL-TIME
+        function filterGallery(category, btnElement) {
+            // 1. Ubah warna tombol
+            const allBtns = document.querySelectorAll('.filter-btn');
+            allBtns.forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white', 'shadow-sm', 'border-blue-600');
+                btn.classList.add('bg-white', 'text-gray-600', 'border-gray-200');
+            });
+            btnElement.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
+            btnElement.classList.add('bg-blue-600', 'text-white', 'shadow-sm', 'border-blue-600');
+
+            // 2. Saring baris tabel
+            const rows = document.querySelectorAll('.gallery-row');
+            let visibleCount = 0;
+            
+            rows.forEach(row => {
+                if (category === 'all' || row.getAttribute('data-category') === category) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // 3. Tampilkan pesan kalau kosong
+            let emptyRow = document.getElementById('empty-filter-msg');
+            if (visibleCount === 0 && rows.length > 0) {
+                if (!emptyRow) {
+                    const tbody = document.getElementById('gallery-tbody');
+                    const tr = document.createElement('tr');
+                    tr.id = 'empty-filter-msg';
+                    tr.innerHTML = `<td colspan="4" class="p-8 text-center text-gray-500"><i data-lucide="image-off" class="w-12 h-12 mx-auto mb-3 text-gray-300"></i><p>Tidak ada foto di kategori ini.</p></td>`;
+                    tbody.appendChild(tr);
+                    lucide.createIcons();
+                } else {
+                    emptyRow.style.display = '';
+                }
+            } else if (emptyRow) {
+                emptyRow.style.display = 'none';
+            }
+        }
+
+        // FUNGSI VALIDASI FILE (MAX 1MB, ONLY IMAGE)
+        function validateImageFile(input) {
+            const file = input.files[0];
+            if (file) {
+                if (file.size > 1048576) {
+                    alert("⚠️ UKURAN TERLALU BESAR!\nMaksimal file gambar adalah 1 MB.");
+                    input.value = ""; 
+                    return false;
+                }
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert("⚠️ FORMAT TIDAK DIDUKUNG!\nHanya diperbolehkan upload file berformat JPG, JPEG, PNG, atau WEBP.");
+                    input.value = ""; 
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        document.getElementById('file-upload').addEventListener('change', function(e) {
+            if (validateImageFile(this)) {
+                const fileName = e.target.files[0] ? e.target.files[0].name : '';
+                document.getElementById('file-name-display').textContent = fileName ? 'File dipilih: ' + fileName : '';
+            } else {
+                document.getElementById('file-name-display').textContent = '';
+            }
+        });
+
+        document.getElementById('edit-file-upload').addEventListener('change', function(e) {
+            if (validateImageFile(this)) {
+                const fileName = e.target.files[0] ? e.target.files[0].name : '';
+                document.getElementById('edit-file-name-display').textContent = fileName ? 'File dipilih: ' + fileName : '';
+            } else {
+                document.getElementById('edit-file-name-display').textContent = '';
+            }
+        });
+
+        function openEditModal(id, title, category, description, oldImg) {
             document.getElementById('edit_id').value = id;
             document.getElementById('edit_title').value = title;
             document.getElementById('edit_category').value = category;
-            document.getElementById('edit_image_url').value = imageUrl;
             document.getElementById('edit_description').value = description;
+            document.getElementById('edit_old_image').value = oldImg; 
+            document.getElementById('edit-file-name-display').textContent = ''; 
 
             const modal = document.getElementById('editModal');
             const content = document.getElementById('modalContent');
@@ -229,6 +389,16 @@ $galleries = $galleryModel->getAllGallery();
             
             content.classList.add('scale-95');
             modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        const alertBox = document.getElementById('notification-alert');
+        if (alertBox) {
+            setTimeout(() => {
+                alertBox.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                alertBox.style.opacity = '0';
+                alertBox.style.transform = 'translateY(-10px)';
+                setTimeout(() => alertBox.remove(), 500); 
+            }, 3000); 
         }
     </script>
 </body>

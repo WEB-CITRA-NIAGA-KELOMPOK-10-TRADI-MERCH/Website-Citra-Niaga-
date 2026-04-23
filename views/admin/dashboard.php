@@ -30,15 +30,31 @@ $query_sejarah = @mysqli_query($conn, "SELECT COUNT(*) as total FROM history");
 if($query_sejarah && $row = mysqli_fetch_assoc($query_sejarah)) { $total_sejarah = $row['total']; }
 
 $chart_labels = [];
-$chart_data = [];
+$visitor_data = [];
+$review_data = [];
+$total_visitor_7_hari = 0;
+
 for ($i = 6; $i >= 0; $i--) {
     $date = date('Y-m-d', strtotime("-$i days"));
     $display_date = date('d M', strtotime("-$i days"));
     $chart_labels[] = $display_date;
 
-    $q_chart = @mysqli_query($conn, "SELECT COUNT(*) as cnt FROM reviews WHERE DATE(visit_date) = '$date'");
-    $count = ($q_chart && $r = mysqli_fetch_assoc($q_chart)) ? (int)$r['cnt'] : 0;
-    $chart_data[] = $count;
+    $q_visitor = @mysqli_query($conn, "SELECT COUNT(*) as cnt FROM visitor_logs WHERE visit_date = '$date'");
+    $v_count = ($q_visitor && $r = mysqli_fetch_assoc($q_visitor)) ? (int)$r['cnt'] : 0;
+    $visitor_data[] = $v_count;
+    $total_visitor_7_hari += $v_count;
+
+    $q_review = @mysqli_query($conn, "SELECT COUNT(*) as cnt FROM reviews WHERE DATE(visit_date) = '$date'");
+    $r_count = ($q_review && $r = mysqli_fetch_assoc($q_review)) ? (int)$r['cnt'] : 0;
+    $review_data[] = $r_count;
+}
+
+$query_traffic_pages = @mysqli_query($conn, "SELECT page_visited, COUNT(id) as total_views FROM visitor_logs GROUP BY page_visited ORDER BY total_views DESC LIMIT 5");
+$top_pages_data = [];
+if ($query_traffic_pages) {
+    while($row = mysqli_fetch_assoc($query_traffic_pages)) {
+        $top_pages_data[] = $row;
+    }
 }
 ?>
 
@@ -87,11 +103,16 @@ for ($i = 6; $i >= 0; $i--) {
                 <i data-lucide="store" class="w-5 h-5"></i>
                 <span class="text-sm font-medium">Kelola Kios</span>
             </a>
+            
+            <a href="events.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition">
+                <i data-lucide="calendar" class="w-5 h-5"></i>
+                <span class="text-sm font-medium">Kelola Acara</span>
+            </a>
+
             <a href="reviews.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition">
                 <i data-lucide="message-square" class="w-5 h-5"></i>
-                <span class="text-sm font-medium">Kelola Review</span>
+                <span class="text-sm font-medium">Kelola Ulasan</span>
             </a>
-            
             <a href="settings.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition">
                 <i data-lucide="settings" class="w-5 h-5"></i>
                 <span class="text-sm font-medium">Pengaturan Web</span>
@@ -119,10 +140,6 @@ for ($i = 6; $i >= 0; $i--) {
                     <p id="live-date" class="text-[10px] text-slate-400 uppercase">Memuat tanggal...</p>
                 </div>
 
-                <button class="text-slate-400 hover:text-blue-600 transition relative">
-                    <i data-lucide="bell" class="w-5 h-5"></i>
-                    <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-                </button>
                 <div class="flex items-center gap-3">
                     <div class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
                         <?= strtoupper(substr($_SESSION['username'] ?? 'A', 0, 1)) ?>
@@ -147,7 +164,6 @@ for ($i = 6; $i >= 0; $i--) {
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                
                 <div class="bg-blue-600 rounded-2xl p-6 text-white shadow-sm relative overflow-hidden">
                     <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4 bg-white/20">
                         <i data-lucide="users" class="w-5 h-5"></i>
@@ -166,15 +182,6 @@ for ($i = 6; $i >= 0; $i--) {
                     <p class="text-[10px] text-indigo-200">unit terdaftar</p>
                 </div>
 
-                <div class="bg-sky-500 rounded-2xl p-6 text-white shadow-sm relative overflow-hidden">
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4 bg-white/20">
-                        <i data-lucide="image" class="w-5 h-5"></i>
-                    </div>
-                    <h3 class="text-4xl font-bold mb-1"><?= $total_galeri ?></h3>
-                    <p class="text-sm font-semibold">Total Galeri</p>
-                    <p class="text-[10px] text-sky-100">foto diunggah</p>
-                </div>
-
                 <div class="bg-red-500 rounded-2xl p-6 text-white shadow-sm relative overflow-hidden">
                     <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4 bg-white/20">
                         <i data-lucide="star" class="w-5 h-5 fill-current"></i>
@@ -187,30 +194,94 @@ for ($i = 6; $i >= 0; $i--) {
                     <p class="text-[10px] text-red-200">dari <?= $total_review ?> ulasan</p>
                 </div>
 
+                <div class="bg-emerald-500 rounded-2xl p-6 text-white shadow-sm relative overflow-hidden">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4 bg-white/20">
+                        <i data-lucide="activity" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-4xl font-bold mb-1"><?= $total_visitor_7_hari ?></h3>
+                    <p class="text-sm font-semibold">Traffic Mingguan</p>
+                    <p class="text-[10px] text-emerald-100">pengunjung unik 7 hari</p>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-10">
                 
-                <div class="lg:col-span-2 bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
-                    <div class="flex justify-between items-start mb-6">
-                        <div>
-                            <h3 class="font-bold text-lg text-slate-800 tracking-widest uppercase">Aktivitas Ulasan</h3>
-                            <p class="text-xs text-slate-500">Statistik 7 hari terakhir</p>
+                <div class="lg:col-span-2 flex flex-col gap-6">
+                    
+                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <h3 class="font-bold text-lg text-slate-800 tracking-widest uppercase">Statistik Pengunjung (Traffic)</h3>
+                                <p class="text-xs text-slate-500">Jumlah kunjungan unik dalam 7 hari terakhir</p>
+                            </div>
+                            <div class="px-3 py-1 bg-green-50 text-green-600 text-xs font-bold rounded-full border border-green-100 flex items-center gap-1.5 shadow-sm">
+                                <span class="relative flex h-2 w-2">
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                </span>
+                                Live
+                            </div>
                         </div>
-                        <div class="px-3 py-1 bg-green-50 text-green-600 text-xs font-bold rounded-full border border-green-100 flex items-center gap-1.5 shadow-sm">
-                            <span class="relative flex h-2 w-2">
-                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                              <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                            </span>
-                            Live
+                        <div class="w-full h-[220px]">
+                            <canvas id="trafficChart"></canvas>
                         </div>
                     </div>
-                    <div class="w-full h-[250px]">
-                        <canvas id="trafficChart"></canvas>
+
+                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <h3 class="font-bold text-lg text-slate-800 tracking-widest uppercase">Aktivitas Ulasan (Reviews)</h3>
+                                <p class="text-xs text-slate-500">Jumlah ulasan yang masuk dalam 7 hari terakhir</p>
+                            </div>
+                        </div>
+                        <div class="w-full h-[220px]">
+                            <canvas id="reviewChart"></canvas>
+                        </div>
                     </div>
+
+                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <h3 class="font-bold text-lg text-slate-800 tracking-widest uppercase flex items-center gap-2">
+                                    Halaman Terpopuler
+                                </h3>
+                                <p class="text-xs text-slate-500">Halaman yang paling sering dikunjungi</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <?php 
+                            $max_views = !empty($top_pages_data) ? $top_pages_data[0]['total_views'] : 1; 
+                            foreach($top_pages_data as $index => $t): 
+                                $percentage = ($t['total_views'] / $max_views) * 100;
+                                $page_name = $t['page_visited'];
+                                if($page_name == 'index.php' || $page_name == '') $page_name = 'Home / Beranda';
+                                if($page_name == 'kios.php') $page_name = 'Kios & UMKM';
+                                if($page_name == 'gallery.php') $page_name = 'Galeri Foto';
+                                if($page_name == 'events.php') $page_name = 'Event & Acara';
+                                if($page_name == 'profile.php') $page_name = 'Profile & Sejarah';
+                                if($page_name == 'reviews.php') $page_name = 'Ulasan Pengunjung';
+                            ?>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="font-bold text-slate-700"><?= $index + 1 ?>. <?= $page_name ?></span>
+                                    <span class="text-slate-500 font-bold"><?= $t['total_views'] ?> views</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-2.5">
+                                    <div class="bg-blue-500 h-2.5 rounded-full" style="width: <?= $percentage ?>%"></div>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                            
+                            <?php if(empty($top_pages_data)): ?>
+                                <p class="text-sm text-slate-400 italic text-center py-4">Belum ada data kunjungan halaman.</p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
                 </div>
 
-                <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
+                <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 h-fit sticky top-8">
                     <h3 class="font-bold text-lg text-slate-800 tracking-widest uppercase mb-1">Akses Cepat</h3>
                     <p class="text-xs text-slate-500 mb-6">Kelola data langsung</p>
 
@@ -233,9 +304,17 @@ for ($i = 6; $i >= 0; $i--) {
                             </div>
                             <i data-lucide="chevron-right" class="w-4 h-4"></i>
                         </a>
+                        
+                        <a href="events.php" class="flex items-center justify-between p-4 rounded-xl border border-orange-100 bg-orange-50/50 hover:bg-orange-100 transition text-orange-700 font-semibold text-sm">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="calendar" class="w-5 h-5 text-orange-500"></i> Kelola Acara
+                            </div>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </a>
+
                         <a href="reviews.php" class="flex items-center justify-between p-4 rounded-xl border border-red-100 bg-red-50/50 hover:bg-red-100 transition text-red-700 font-semibold text-sm">
                             <div class="flex items-center gap-3">
-                                <i data-lucide="star" class="w-5 h-5 text-red-500"></i> Kelola Review
+                                <i data-lucide="star" class="w-5 h-5 text-red-500"></i> Kelola Ulasan
                             </div>
                             <i data-lucide="chevron-right" class="w-4 h-4"></i>
                         </a>
@@ -261,14 +340,55 @@ for ($i = 6; $i >= 0; $i--) {
         setInterval(updateClock, 1000);
         updateClock(); 
 
-        const ctx = document.getElementById('trafficChart').getContext('2d');
-        const trafficChart = new Chart(ctx, {
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } }, 
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1, color: '#94a3b8', font: { size: 10 } },
+                    border: { display: false },
+                    grid: { color: '#f1f5f9' }
+                },
+                x: {
+                    ticks: { color: '#94a3b8', font: { size: 10 } },
+                    border: { display: false },
+                    grid: { display: false }
+                }
+            }
+        };
+
+        const ctxTraffic = document.getElementById('trafficChart').getContext('2d');
+        new Chart(ctxTraffic, {
+            type: 'line',
+            data: {
+                labels: <?php echo json_encode($chart_labels); ?>, 
+                datasets: [{
+                    label: 'Pengunjung Web',
+                    data: <?php echo json_encode($visitor_data); ?>, 
+                    borderColor: '#10b981', 
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#10b981',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    tension: 0.4, 
+                    fill: true
+                }]
+            },
+            options: commonOptions
+        });
+
+        const ctxReview = document.getElementById('reviewChart').getContext('2d');
+        new Chart(ctxReview, {
             type: 'line',
             data: {
                 labels: <?php echo json_encode($chart_labels); ?>, 
                 datasets: [{
                     label: 'Jumlah Ulasan',
-                    data: <?php echo json_encode($chart_data); ?>, 
+                    data: <?php echo json_encode($review_data); ?>, 
                     borderColor: '#2563eb', 
                     backgroundColor: 'rgba(37, 99, 235, 0.1)',
                     borderWidth: 3,
@@ -280,24 +400,7 @@ for ($i = 6; $i >= 0; $i--) {
                     fill: true
                 }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } }, 
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { stepSize: 1, color: '#94a3b8', font: { size: 10 } },
-                        border: { display: false },
-                        grid: { color: '#f1f5f9' }
-                    },
-                    x: {
-                        ticks: { color: '#94a3b8', font: { size: 10 } },
-                        border: { display: false },
-                        grid: { display: false }
-                    }
-                }
-            }
+            options: commonOptions
         });
     </script>
 </body>

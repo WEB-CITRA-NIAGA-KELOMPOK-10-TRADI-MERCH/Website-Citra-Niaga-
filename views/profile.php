@@ -15,7 +15,7 @@ require_once 'templates/header.php';
     <section class="pt-32 pb-24 text-center relative overflow-hidden">
         <div class="absolute inset-0 opacity-5 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiMwMDAwMDAiIGZpbGwtb3BhY2l0eT0iMSIvPjwvc3ZnPg==')] z-0"></div>
         
-        <h1 class="font-cinzel text-5xl md:text-6xl font-bold text-gray-900 tracking-widest uppercase relative z-10 fade-in-up drop-shadow-sm">HISTORY & PROFILE</h1>
+        <h1 class="font-cinzel text-5xl md:text-6xl font-bold text-gray-900 tracking-widest uppercase relative z-10 fade-in-up drop-shadow-sm">SEJARAH & PROFIL</h1>
     </section>
 
     <section class="max-w-5xl mx-auto px-4 -mt-12 relative z-20 mb-32">
@@ -24,29 +24,29 @@ require_once 'templates/header.php';
                 <div class="w-12 h-12 bg-blue-50 text-brand-blue rounded-full flex items-center justify-center mb-5">
                     <i data-lucide="map-pin" class="w-5 h-5"></i>
                 </div>
-                <h3 class="font-cinzel font-bold text-sm tracking-widest mb-3 uppercase text-gray-900">Strategic Location</h3>
-                <p class="text-xs text-gray-500 leading-relaxed">Situated in the heart of Samarinda near the Mahakam River port</p>
+                <h3 class="font-cinzel font-bold text-sm tracking-widest mb-3 uppercase text-gray-900">Lokasi Strategis</h3>
+                <p class="text-xs text-gray-500 leading-relaxed">Terletak di jantung Kota Samarinda, menjadi pusat bertemunya ekonomi dan budaya lokal.</p>
             </div>
             <div class="bg-white p-10 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col items-center hover:shadow-md transition">
                 <div class="w-12 h-12 bg-red-50 text-red-400 rounded-full flex items-center justify-center mb-5">
                     <i data-lucide="award" class="w-5 h-5"></i>
                 </div>
-                <h3 class="font-cinzel font-bold text-sm tracking-widest mb-3 uppercase text-gray-900">Aga Khan Award</h3>
-                <p class="text-xs text-gray-500 leading-relaxed">Recognized globally in 1989 for excellence in architecture and urban integration.</p>
+                <h3 class="font-cinzel font-bold text-sm tracking-widest mb-3 uppercase text-gray-900">Penghargaan Aga Khan</h3>
+                <p class="text-xs text-gray-500 leading-relaxed">Meraih penghargaan arsitektur dunia pada 1989 berkat keunggulan tata ruang publiknya.</p>
             </div>
             <div class="bg-white p-10 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col items-center hover:shadow-md transition">
                 <div class="w-12 h-12 bg-gray-50 text-gray-600 rounded-full flex items-center justify-center mb-5">
                     <i data-lucide="hammer" class="w-5 h-5"></i>
                 </div>
-                <h3 class="font-cinzel font-bold text-sm tracking-widest mb-3 uppercase text-gray-900">Built in 1987</h3>
-                <p class="text-xs text-gray-500 leading-relaxed">Designed by architect Antonio Ismael to accommodate both street vendors and shops.</p>
+                <h3 class="font-cinzel font-bold text-sm tracking-widest mb-3 uppercase text-gray-900">Dibangun Tahun 1987</h3>
+                <p class="text-xs text-gray-500 leading-relaxed">Dirancang oleh arsitek Adhi Moersid untuk menyatukan pedagang kaki lima dan pertokoan.</p>
             </div>
         </div>
     </section>
 
     <section class="max-w-4xl mx-auto px-4">
         <div class="text-center mb-20">
-            <h2 class="font-cinzel text-3xl md:text-4xl font-bold text-[#111827] uppercase tracking-widest">The Journey of Citra Niaga</h2>
+            <h2 class="font-cinzel text-3xl md:text-4xl font-bold text-[#111827] uppercase tracking-widest">Jejak Langkah Citra Niaga</h2>
         </div>
 
         <div class="relative pl-8 md:pl-0">
@@ -67,10 +67,10 @@ require_once 'templates/header.php';
                                 <?= $row['year'] ?>
                             </div>
                             
-                            <h3 class="font-cinzel text-xl font-bold text-gray-900 mb-4 uppercase tracking-wider"><?= $row['title'] ?></h3>
+                            <h3 class="font-cinzel text-xl font-bold text-gray-900 mb-4 uppercase tracking-wider"><?= htmlspecialchars($row['title']) ?></h3>
                             
                             <p class="text-gray-500 text-sm leading-relaxed">
-                                <?= $row['content'] ?>
+                                <?= htmlspecialchars($row['content']) ?>
                             </p>
 
                         </div>

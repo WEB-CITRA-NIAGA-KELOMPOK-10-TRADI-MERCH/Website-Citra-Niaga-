@@ -3,7 +3,7 @@ class AuthModel {
     /** @var mysqli $conn */
     private $conn;
 
-    /**
+    /**=
      * @param mysqli $db
      */
     public function __construct($db) {

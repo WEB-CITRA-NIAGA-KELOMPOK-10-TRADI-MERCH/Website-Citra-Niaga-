@@ -40,24 +40,44 @@ document.addEventListener("DOMContentLoaded", function() {
 
     window.observeAnimations();
 
-    const mutationObserver = new MutationObserver(() => {
-        window.refreshIcons();
-        window.observeAnimations();
-    });
-    
-    mutationObserver.observe(document.body, { 
-        childList: true, 
-        subtree: true 
-    });
+    const carousels = document.querySelectorAll('.carousel');
+    carousels.forEach(carousel => {
+        let isDragging = false;
+        let startPos = 0;
 
-    const mainImage = document.getElementById('main-gallery-image'); 
-    const thumbnails = document.querySelectorAll('.gallery-thumbnail'); 
-
-    if (mainImage && thumbnails.length > 0) {
-        thumbnails.forEach(thumb => {
-            thumb.addEventListener('click', function() {
-                mainImage.src = this.src;
+        const images = carousel.querySelectorAll('img');
+        images.forEach(img => {
+            img.addEventListener('dragstart', (e) => {
+                e.preventDefault(); 
             });
         });
-    }
+
+        carousel.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startPos = e.pageX;
+            carousel.classList.add('is-dragging');
+        });
+
+        carousel.addEventListener('mouseleave', () => {
+            isDragging = false;
+            carousel.classList.remove('is-dragging');
+        });
+
+        carousel.addEventListener('mouseup', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            carousel.classList.remove('is-dragging');
+            
+            const endPos = e.pageX;
+            const distance = startPos - endPos;
+
+            if (distance > 50) {
+                const bsCarousel = bootstrap.Carousel.getInstance(carousel) || new bootstrap.Carousel(carousel);
+                bsCarousel.next();
+            } else if (distance < -50) {
+                const bsCarousel = bootstrap.Carousel.getInstance(carousel) || new bootstrap.Carousel(carousel);
+                bsCarousel.prev();
+            }
+        });
+    });
 });

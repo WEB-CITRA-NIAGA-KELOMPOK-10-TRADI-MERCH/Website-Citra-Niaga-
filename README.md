@@ -21,7 +21,7 @@
 | <div align="center">Sistem Informasi A '24</div> | <div align="center">Sistem Informasi A '24</div> | <div align="center">Sistem Informasi A '24</div> | <div align="center">Sistem Informasi A '24</div> |
 | <div align="center"><a href="https://github.com/rinaaluthfiah"><img src="https://img.shields.io/badge/GitHub-Isrina-grey?style=for-the-badge&logo=github"></a></div> | <div align="center"><a href="https://github.com/angiee24"><img src="https://img.shields.io/badge/GitHub-Angela-grey?style=for-the-badge&logo=github"></a></div> | <div align="center"><a href="https://github.com/Zahraramadhani014"><img src="https://img.shields.io/badge/GitHub-Zahra-grey?style=for-the-badge&logo=github"></a></div> | <div align="center"><a href="https://github.com/aliyah06667"><img src="https://img.shields.io/badge/GitHub-Aliyah-grey?style=for-the-badge&logo=github"></a></div> |
 
----
+
 
 ## 🏙️ 𝐏𝐫𝐨𝐟𝐢𝐥 𝐎𝐛𝐣𝐞𝐤 𝐖𝐢𝐬𝐚𝐭𝐚
 
@@ -29,7 +29,7 @@
 Citra Niaga Samarinda merupakan salah satu kawasan ikonik di Kota Samarinda yang dikenal sebagai pusat aktivitas ekonomi, kuliner, dan budaya. Kawasan ini menjadi tempat berkumpulnya masyarakat serta memiliki berbagai fasilitas seperti area kuliner, kios UMKM, dan ruang publik yang sering dimanfaatkan untuk kegiatan sosial.
 </p>
 
-
+---
 
 ## 💢 𝐏𝐞𝐫𝐦𝐚𝐬𝐚𝐥𝐚𝐡𝐚𝐧
 
@@ -40,6 +40,8 @@ Citra Niaga Samarinda merupakan salah satu kawasan ikonik di Kota Samarinda yang
 | Pengelolaan data masih dilakukan secara manual sehingga kurang efisien dalam proses pembaruan informasi |
 | Belum tersedianya website resmi menyebabkan promosi kawasan masih terbatas |
 | Tidak adanya sistem interaktif bagi pengunjung seperti fitur ulasan atau feedback |
+
+
 
 
 <details>
@@ -53,7 +55,11 @@ Website Citra Niaga Samarinda dibuat sebagai media digital yang menyajikan infor
 Selain itu, website ini juga hadir sebagai solusi terhadap permasalahan pengelolaan informasi yang sebelumnya masih terbatas. Dengan adanya sistem pengelolaan data berbasis CRUD, proses pembaruan informasi menjadi lebih mudah dan efisien. Seluruh data tersimpan dalam database sehingga lebih terorganisir dan terintegrasi. Untuk meningkatkan interaksi pengguna, website ini juga dilengkapi dengan fitur ulasan pengunjung. Fitur ini memungkinkan pengguna untuk berbagi pengalaman sekaligus mendukung promosi kawasan Citra Niaga agar lebih dikenal secara luas melalui media digital.
 </p>
 
+---
+
 </details>
+
+
 
 <details>
 <summary><h2>📁 𝐅𝐢𝐭𝐮𝐫 𝐖𝐞𝐛𝐬𝐢𝐭𝐞</h2></summary>
@@ -84,7 +90,9 @@ Pengunjung dapat mengakses berbagai informasi terkait kawasan Citra Niaga secara
 - **Melihat dan Mengirim Ulasan**  
   Pengunjung dapat melihat ulasan dari pengunjung lain serta memberikan ulasan terhadap kawasan Citra Niaga.
 
-### 🔐 𝗔𝗱𝗺𝗶𝗻
+---
+
+### 🙎🏻‍♀️ 𝗔𝗱𝗺𝗶𝗻
 
 Admin memiliki akses khusus melalui sistem login untuk mengelola seluruh data yang ditampilkan pada website. Fitur yang tersedia antara lain:
 
@@ -110,29 +118,36 @@ Admin memiliki akses khusus melalui sistem login untuk mengelola seluruh data ya
   Digunakan untuk mengatur konfigurasi dan tampilan website sesuai kebutuhan.
 
 
-
+---
 
 ##  ─── ⋆⋅☆⋅⋆ ──𝐓𝐚𝐦𝐩𝐢𝐥𝐚𝐧 𝐅𝐢𝐭𝐮𝐫 𝗨𝘁𝗮𝗺𝗮 𝗪𝗲𝗯𝘀𝗶𝘁𝗲 𝗖𝗶𝘁𝗿𝗮 𝗡𝗶𝗮𝗴𝗮  ─── ⋆⋅☆⋅⋆ ──
 
-### 🖼️ 1. Halaman Beranda
-
-<img width="481" height="895" alt="image" src="https://github.com/user-attachments/assets/45e00db3-00ae-425b-9c23-00179b004cd6" />
+### 🖼️ 1. Halaman Pengunjung (Beranda)
 
 
-Halaman utama yang menampilkan informasi umum mengenai Citra Niaga Samarinda, seperti deskripsi kawasan, navigasi menu, serta akses cepat ke fitur utama seperti galeri dan informasi wisata.
+<img width="1150" height="797" alt="image" src="https://github.com/user-attachments/assets/85bfa107-0967-43c1-b034-78bb76ac7730" />
+
+<p align="justify">
+Halaman ini merupakan halaman utama yang dapat diakses oleh seluruh pengguna tanpa perlu login. Pengunjung dapat melihat informasi umum mengenai Citra Niaga Samarinda secara langsung melalui tampilan yang sederhana dan mudah dipahami.
+Pada halaman ini disediakan berbagai fitur utama seperti navigasi ke halaman profil dan sejarah, galeri, kios, acara, serta ulasan pengunjung. Informasi yang ditampilkan bertujuan untuk memberikan gambaran lengkap mengenai kawasan Citra Niaga sehingga dapat membantu pengunjung dalam mengenal dan mengeksplorasi tempat tersebut. Tampilan halaman dirancang responsif dan interaktif agar memberikan pengalaman pengguna yang nyaman saat mengakses website dari berbagai perangkat.
+</p>
 
 
-### 🖼️ 2. Halaman Detail Wisata
+---
 
-<img width="457" height="897" alt="Screenshot 2026-04-24 205632" src="https://github.com/user-attachments/assets/63fd6e4b-5c14-4e53-bfde-1a691f7f276e" />
+### 🖼️ 2. Halaman Admin (Dashboard) 
 
-Menampilkan informasi lebih lengkap mengenai Citra Niaga, meliputi deskripsi, fasilitas, serta informasi tambahan yang membantu pengunjung memahami kawasan secara lebih mendalam.
+<img width="1150" height="797" alt="image" src="https://github.com/user-attachments/assets/228c1f9b-163e-4a30-a799-fedc84e76344" />
 
-### 🖼️ 3. Dashboard Admin
 
-<img width="1175" height="808" alt="image" src="https://github.com/user-attachments/assets/228c1f9b-163e-4a30-a799-fedc84e76344" />
+<p align="justify">
 
-Halaman khusus admin yang digunakan untuk mengelola seluruh data website. Pada halaman ini, admin dapat memantau aktivitas melalui dashboard serta mengakses fitur pengelolaan seperti galeri, kios, acara, dan ulasan.
+Halaman ini merupakan halaman khusus yang hanya dapat diakses oleh admin melalui proses login (autentikasi). Sistem akan memverifikasi akun menggunakan session, sehingga hanya pengguna yang memiliki hak akses yang dapat masuk ke dashboard.
+Pada halaman ini, admin dapat mengelola seluruh data website secara terpusat, seperti data galeri, kios, acara, sejarah, serta ulasan pengunjung. Selain itu, dashboard juga menampilkan informasi statistik berupa jumlah data dan aktivitas pengunjung dalam bentuk grafik, sehingga memudahkan admin dalam melakukan monitoring dan pengambilan keputusan.Dengan adanya pembatasan akses ini, keamanan data website dapat lebih terjaga dan pengelolaan sistem menjadi lebih terkontrol.
+
+</p>
+
+---
 
 </details>
 
@@ -140,7 +155,70 @@ Halaman khusus admin yang digunakan untuk mengelola seluruh data website. Pada h
 <details>
 <summary><h2>📁 𝐒𝐭𝐫𝐮𝐤𝐭𝐮𝐫 𝐅𝐨𝐥𝐝𝐞𝐫</h2></summary>
 
+### 📌 Keterangan Struktur Folder
 
+<p align="justify">
+Struktur folder pada project ini disusun secara terorganisir dengan memisahkan antara tampilan, logika program, dan pengelolaan data. Folder dalam project ini terdiri dari bagian tampilan (views), pengolahan data (models), serta pengatur alur program (controllers). Selain itu, terdapat folder pendukung seperti assets untuk menyimpan file tampilan dan config untuk konfigurasi sistem. Dengan struktur ini, setiap bagian memiliki fungsi yang jelas sehingga sistem dapat berjalan dengan lebih efektif dan efisien.
+</p>
+
+        citraniaga/
+        │
+        ├── assets/
+        │   ├── css/
+        │   │   └── style.css
+        │   ├── js/
+        │   │   └── main.js
+        │   └── img/
+        │       ├── Events/
+        │       ├── Gallery/
+        │       ├── Kios/
+        │       └── Logo/
+        │
+        ├── config/
+        │   └── koneksi.php
+        │
+        ├── controllers/
+        │   ├── AuthController.php
+        │   ├── EventController.php
+        │   ├── GalleryController.php
+        │   ├── HistoryController.php
+        │   ├── KiosController.php
+        │   ├── ReviewsController.php
+        │   └── SettingsController.php
+        │
+        ├── models/
+        │   ├── AuthModel.php
+        │   ├── GalleryModel.php
+        │   ├── HistoryModel.php
+        │   ├── KiosModel.php
+        │   ├── ReviewsModel.php
+        │   ├── SettingsModel.php
+        │   └── VisitorModel.php
+        │
+        ├── views/
+        │   ├── admin/
+        │   │   ├── dashboard.php
+        │   │   ├── events.php
+        │   │   ├── gallery.php
+        │   │   ├── history.php
+        │   │   ├── kios.php
+        │   │   ├── reviews.php
+        │   │   └── settings.php
+        │   ├── templates/
+        │   │   ├── header.php
+        │   │   └── footer.php
+        │   ├── index.php
+        │   ├── detail.php
+        │   ├── events.php
+        │   ├── gallery.php
+        │   ├── kios.php
+        │   ├── login.php
+        │   ├── profile.php
+        │   ├── register.php
+        │   └── reviews.php
+        │
+        └── README.md
+ ---
 
 </details>
 
@@ -152,13 +230,158 @@ Halaman khusus admin yang digunakan untuk mengelola seluruh data website. Pada h
 
 
 
+### 1. users  
+
+Menyimpan data akun pengguna yang digunakan untuk mengakses sistem, seperti admin.
+
+| Field | Tipe Data | Keterangan |
+|------|----------|-----------|
+| id | int | ID pengguna |
+| username | varchar | nama pengguna |
+| password | varchar | kata sandi |
+| email | varchar | email pengguna |
+| role | varchar | peran pengguna (admin) |
+| created_at | timestamp | waktu akun dibuat |
+
+---
+
+### 2. history  
+Menyimpan data sejarah atau profil Citra Niaga.
+
+| Field | Tipe Data | Keterangan |
+|------|----------|-----------|
+| id | int | ID data |
+| title | varchar | judul sejarah |
+| content | text | isi deskripsi |
+| year | int | tahun |
+| created_at | timestamp | waktu dibuat |
+
+---
+
+### 3. gallery  
+Menyimpan data galeri foto.
+
+| Field | Tipe Data | Keterangan |
+|------|----------|-----------|
+| id | int | ID gambar |
+| title | varchar | judul gambar |
+| description | text | deskripsi |
+| image | varchar | file gambar |
+| category | varchar | kategori |
+| created_at | timestamp | waktu upload |
+
+---
+
+### 4. kios  
+Menyimpan data kios atau ruko.
+
+| Field | Tipe Data | Keterangan |
+|------|----------|-----------|
+| id | int | ID kios |
+| name | varchar | nama kios |
+| business_type | varchar | jenis usaha |
+| location | varchar | lokasi |
+| description | text | deskripsi |
+| contact_phone | varchar | nomor kontak |
+| image | varchar | foto kios |
+| created_at | timestamp | waktu dibuat |
+
+---
+
+### 5. events  
+Menyimpan data acara atau kegiatan.
+
+| Field | Tipe Data | Keterangan |
+|------|----------|-----------|
+| id | int | ID acara |
+| title | varchar | nama acara |
+| description | text | deskripsi |
+| start_date | date | tanggal mulai |
+| end_date | date | tanggal selesai |
+| image | varchar | gambar acara |
+
+---
+
+### 6. reviews  
+Menyimpan ulasan dari pengunjung.
+
+| Field | Tipe Data | Keterangan |
+|------|----------|-----------|
+| id | int | ID ulasan |
+| user_id | int | ID pengguna |
+| visitor_name | varchar | nama pengunjung |
+| rating | int | nilai rating |
+| comment | text | komentar |
+| visit_date | date | tanggal kunjungan |
+| created_at | timestamp | waktu dibuat |
+| is_pinned | boolean | status ulasan |
+
+---
+
+### 7. settings  
+Menyimpan pengaturan website.
+
+| Field | Tipe Data | Keterangan |
+|------|----------|-----------|
+| id | int | ID pengaturan |
+| site_title | varchar | judul website |
+| site_desc | text | deskripsi |
+| hero_banner | varchar | banner |
+| theme_color | varchar | warna tema |
+| contact_phone | varchar | nomor kontak |
+| contact_email | varchar | email |
+| contact_address | text | alamat |
+
+---
+
+### 8. visitors  
+Menyimpan data kunjungan halaman.
+
+| Field | Tipe Data | Keterangan |
+|------|----------|-----------|
+| id | int | ID data |
+| page | varchar | halaman |
+| visited_at | timestamp | waktu kunjungan |
+
+---
+
+### 9. visitor_logs  
+Menyimpan log aktivitas pengunjung.
+
+| Field | Tipe Data | Keterangan |
+|------|----------|-----------|
+| id | int | ID log |
+| ip_address | varchar | alamat IP |
+| visit_date | date | tanggal |
+| page_visited | varchar | halaman yang dikunjungi |
+
+
+---
 </details>
 
 
 <details>
-<summary><h2>📁 𝐈𝐦𝐩𝐥𝐞𝐦𝐞𝐧𝐭𝐚𝐬𝐢 𝐖𝐢𝐝𝐠𝐞𝐭</h2></summary>
+<summary><h2>📁 𝐊𝐨𝐦𝐩𝐨𝐧𝐞𝐧 𝐖𝐞𝐛𝐬𝐢𝐭𝐞</h2></summary>
 
+<p align="justify">
+ Bagian ini menjelaskan beberapa komponen utama yang digunakan dalam pengembangan website Citra Niaga Samarinda. Komponen tersebut digunakan untuk membangun tampilan, mengatur interaksi pengguna, serta menghubungkan halaman dengan data dari database.
+</p>
 
+| Komponen | Implementasi |
+|---|---|
+| **Navbar** | Digunakan sebagai menu navigasi utama untuk berpindah ke halaman Beranda, Sejarah & Profil, Galeri, Kios, Ulasan, dan Acara |
+| **Hero Section** | Menampilkan tampilan awal website berupa gambar utama, judul, deskripsi singkat, serta tombol aksi |
+| **Card** | Digunakan untuk menampilkan data seperti galeri, kios, acara, dan ulasan agar terlihat lebih rapi |
+| **Form** | Digunakan pada halaman login admin, input ulasan, serta pengelolaan data pada halaman admin |
+| **Button** | Digunakan untuk aksi seperti tambah data, edit, hapus, login, logout, dan melihat detail |
+| **Table** | Digunakan pada halaman admin untuk menampilkan data galeri, kios, acara, ulasan, dan sejarah |
+| **Modal / Dialog** | Digunakan untuk menampilkan konfirmasi atau detail data tertentu |
+| **Chart / Grafik** | Digunakan pada dashboard admin untuk menampilkan aktivitas ulasan dan statistik website |
+| **Sidebar Admin** | Digunakan sebagai navigasi khusus admin untuk mengakses menu pengelolaan data |
+| **Session Login** | Digunakan untuk membatasi akses halaman admin agar hanya dapat diakses oleh pengguna yang sudah login |
+| **CRUD** | Digunakan untuk menambah, menampilkan, mengubah, dan menghapus data pada website |
+
+---
 
 </details>
 
@@ -166,6 +389,59 @@ Halaman khusus admin yang digunakan untuk mengelola seluruh data website. Pada h
 <details>
 <summary><h2>📁 𝐓𝐞𝐤𝐧𝐨𝐥𝐨𝐠𝐢 𝐘𝐚𝐧𝐠 𝐃𝐢𝐠𝐮𝐧𝐚𝐤𝐚𝐧</h2></summary>
 
+
+Berikut adalah teknologi utama yang digunakan dalam pengembangan website **Citra Niaga Samarinda**:
+
+<img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white"/>
+<img src="https://img.shields.io/badge/MYSQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white"/>
+<img src="https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html5&logoColor=white"/>
+<img src="https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white"/>
+<img src="https://img.shields.io/badge/JAVASCRIPT-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"/>
+<img src="https://img.shields.io/badge/BOOTSTRAP-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white"/>
+<img src="https://img.shields.io/badge/VUE%20JS-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white"/>
+<img src="https://img.shields.io/badge/AUTH-SESSION%20PHP-orange?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/ARCHITECTURE-MVC-green?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/CRUD-SYSTEM-red?style=for-the-badge"/>
+
+
+---
+
+### 1. Frontend & Tampilan Website
+
+- **HTML**  
+  Digunakan untuk membangun struktur dasar halaman website.
+
+- **CSS**  
+  Digunakan untuk mengatur tampilan dan desain agar website terlihat lebih menarik.
+
+- **Bootstrap 5**  
+  Digunakan sebagai framework CSS untuk membuat tampilan yang responsif dan modern.
+
+- **JavaScript**  
+  Digunakan untuk menambahkan interaksi pada halaman, seperti animasi dan aksi pengguna.
+
+- **Vue JS**  
+  Digunakan untuk meningkatkan interaktivitas dan membuat tampilan lebih dinamis.
+
+---
+
+### 2. Backend & Pengolahan Data
+
+- **PHP**  
+  Digunakan sebagai bahasa pemrograman utama untuk mengelola logika sistem dan menghubungkan frontend dengan database.
+
+- **MySQL**  
+  Digunakan sebagai sistem database untuk menyimpan seluruh data website.
+
+---
+
+### 3. Sistem & Keamanan
+
+- **Session PHP**  
+  Digunakan untuk mengelola autentikasi login dan membatasi akses admin.
+
+- **CRUD System**  
+  Digunakan untuk mengelola data seperti tambah, edit, hapus, dan tampilkan data pada website.
 
 
 </details>

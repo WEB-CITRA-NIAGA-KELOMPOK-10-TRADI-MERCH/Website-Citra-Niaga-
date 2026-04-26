@@ -1,26 +1,30 @@
-<?php require_once 'templates/header.php'; ?>
+<?php 
+require_once '../config/koneksi.php';
+/** @var mysqli $conn */
 
-<?php
-// ==========================================
-// TARIK DATA DARI SETTINGS & BERSIHKAN LINK
-// ==========================================
-$c_address = (!empty($global_setting['contact_address'])) ? nl2br(htmlspecialchars($global_setting['contact_address'])) : 'Jl. Niaga Selatan No. 1, Pasar Pagi,<br>Samarinda Kota, Kota Samarinda,<br>Kalimantan Timur 75111';
-$c_phone = (!empty($global_setting['contact_phone'])) ? htmlspecialchars($global_setting['contact_phone']) : '+62 822-1949-7715';
-$c_email = (!empty($global_setting['contact_email'])) ? htmlspecialchars($global_setting['contact_email']) : 'info@citra-niaga-samarinda.id';
-$c_ig = (!empty($global_setting['contact_ig'])) ? htmlspecialchars($global_setting['contact_ig']) : '@citraniagasamarinda';
+// === PANGGIL PENGATURAN CMS BIAR DINAMIS ===
+require_once '../models/SettingsModel.php'; 
+$settingsModel = new SettingsModel($conn);
+$web_setting = $settingsModel->getSettings(); 
 
-// 1. Pembersih Nomor WhatsApp Otomatis
+$theme_color = !empty($web_setting['theme_color']) ? htmlspecialchars($web_setting['theme_color']) : '#254794';
+$font_family = !empty($web_setting['font_family']) ? htmlspecialchars($web_setting['font_family']) : 'Plus Jakarta Sans';
+
+// Gunakan $web_setting BUKAN $global_setting
+$c_address = (!empty($web_setting['contact_address'])) ? nl2br(htmlspecialchars($web_setting['contact_address'])) : 'Jl. Niaga Selatan No. 1, Pasar Pagi,<br>Samarinda Kota, Kota Samarinda,<br>Kalimantan Timur 75111';
+$c_phone = (!empty($web_setting['contact_phone'])) ? htmlspecialchars($web_setting['contact_phone']) : '+62 822-1949-7715';
+$c_email = (!empty($web_setting['contact_email'])) ? htmlspecialchars($web_setting['contact_email']) : 'info@citra-niaga-samarinda.id';
+$c_ig = (!empty($web_setting['contact_ig'])) ? htmlspecialchars($web_setting['contact_ig']) : '@citraniagasamarinda';
+
 $wa_clean = preg_replace('/[^0-9]/', '', $c_phone);
 if (substr($wa_clean, 0, 1) === '0') {
     $wa_clean = '62' . substr($wa_clean, 1);
 }
 $wa_link = "https://wa.me/" . $wa_clean;
 
-// 2. Pembersih Link Instagram Otomatis
 $ig_clean = str_replace('@', '', $c_ig);
 $ig_link = "https://www.instagram.com/" . $ig_clean;
 
-/** @var mysqli $conn */
 $query_events = mysqli_query($conn, "SELECT * FROM events ORDER BY start_date ASC");
 $today = date('Y-m-d');
 
@@ -50,6 +54,8 @@ function formatEventDate(string $start, string $end): string {
     $e = date('d M Y', strtotime($end));
     return ($s === $e) ? $s : "$s - $e";
 }
+
+require_once 'templates/header.php'; 
 ?>
 
 <link rel="stylesheet" href="../assets/css/style.css">
@@ -58,29 +64,61 @@ function formatEventDate(string $start, string $end): string {
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
-    .bg-theme-dynamic { background-color: var(--theme-color, #1e3a8a) !important; }
-    .text-theme-dynamic { color: var(--theme-color, #1e3a8a) !important; }
+    /* ========================================== */
+    /* SIHIR CSS DINAMIS NGIKUTIN DASHBOARD       */
+    /* ========================================== */
+    :root {
+        --theme-color: <?= $theme_color ?>;
+        --font-custom: '<?= $font_family ?>', sans-serif;
+        --theme-color-light: color-mix(in srgb, var(--theme-color) 15%, white);
+    }
+
+    main { font-family: var(--font-custom) !important; }
+
+    .bg-theme-dynamic { background-color: var(--theme-color) !important; }
+    .text-theme-dynamic { color: var(--theme-color) !important; }
+    .bg-theme-light { background-color: var(--theme-color-light) !important; }
     
     .nav-pills .nav-link { color: #6c757d; border-radius: 50px; padding: 10px 24px; transition: all 0.3s; margin: 0 5px; }
-    .nav-pills .nav-link.active { background-color: var(--theme-color, #1e3a8a) !important; color: #fff !important; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .nav-pills .nav-link.active { background-color: var(--theme-color) !important; color: #fff !important; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
     .nav-pills .nav-link:hover:not(.active) { background-color: rgba(0,0,0,0.05); }
     
     .event-card-img { height: 220px; object-fit: cover; }
 
-    /* Custom CSS Hover untuk Kontak */
     .contact-link-card { transition: all 0.3s ease; border-radius: 12px; padding: 8px; margin-left: -8px; }
     .contact-link-card:hover { background-color: #f8fafc; transform: translateX(5px); }
+
+    /* ======================================================== */
+    /* --- FIX RESPONSIVE KHUSUS LAYAR HP (MOBILE DEVICES) ---  */
+    /* ======================================================== */
+    @media (max-width: 768px) {
+        /* Ukuran judul hero disesuaikan biar gak patah */
+        .hero-title { font-size: 2rem !important; }
+        .hero-desc { font-size: 0.95rem !important; padding: 0 1rem; }
+
+        /* Tombol filter acara (Pills) dikecilkan dikit padding dan fontnya */
+        .nav-pills .nav-link { padding: 8px 16px; font-size: 0.85rem; margin: 0 2px 8px 2px; }
+
+        /* Tinggi gambar kartu acara disusutkan biar gak kepanjangan */
+        .event-card-img { height: 180px; }
+
+        /* Area padding pada panduan diperbaiki biar lega */
+        .guide-container { padding: 1rem !important; }
+        
+        /* Tombol kontak diperlebar paddingnya biar gampang dipencet jempol */
+        .contact-link-card { padding: 12px; margin-left: 0; border: 1px solid #f1f5f9; }
+    }
 </style>
 
-<main id="app" v-cloak class="w-100 bg-light pb-5 font-plus-jakarta-sans min-vh-100">
+<main id="app" v-cloak class="w-100 bg-light pb-5 min-vh-100">
     
     <section class="bg-theme-dynamic pt-5 pb-5 text-center position-relative z-1 mt-5">
         <div class="container py-5 fade-in-up">
             <div class="mb-4 text-white d-flex justify-content-center">
                 <i data-lucide="calendar" style="width: 40px; height: 40px; stroke-width: 1.5;"></i>
             </div>
-            <h1 class="font-cinzel display-5 fw-bold text-white mb-3 text-uppercase tracking-widest">Gelar Acaramu</h1>
-            <p class="text-white-50 fs-6 mx-auto mb-0" style="max-width: 700px;">
+            <h1 class="font-cinzel display-5 fw-bold text-white mb-3 text-uppercase tracking-widest hero-title">Gelar Acaramu</h1>
+            <p class="text-white-50 fs-6 mx-auto mb-0 hero-desc" style="max-width: 700px;">
                 Plaza terbuka Citra Niaga menyediakan latar belakang yang sempurna untuk pertunjukan budaya, pameran, dan pertemuan komunitas.
             </p>
         </div>
@@ -88,7 +126,7 @@ function formatEventDate(string $start, string $end): string {
 
     <div class="position-relative w-100 z-0" style="margin-top: -1px;">
         <svg viewBox="0 0 1440 100" class="w-100 h-auto" preserveAspectRatio="none">
-            <path fill="var(--theme-color, #1e3a8a)" d="M0,0 C320,80 720,80 1440,0 L1440,0 L0,0 Z"></path>
+            <path fill="var(--theme-color)" d="M0,0 C320,80 720,80 1440,0 L1440,0 L0,0 Z"></path>
         </svg>
     </div>
 
@@ -100,8 +138,8 @@ function formatEventDate(string $start, string $end): string {
                 
                 <transition-group name="list" tag="div" class="d-flex flex-column gap-3">
                     <div v-for="(guide, index) in guidelines" :key="index" 
-                         class="bg-white rounded-4 p-3 shadow-sm border d-flex align-items-center gap-4 hover-scale transition">
-                        <div class="rounded-circle bg-primary-subtle text-theme-dynamic fw-bold d-flex align-items-center justify-content-center flex-shrink-0" 
+                         class="bg-white rounded-4 p-3 guide-container shadow-sm border d-flex align-items-center gap-3 gap-md-4 hover-scale transition">
+                        <div class="rounded-circle bg-theme-light text-theme-dynamic fw-bold d-flex align-items-center justify-content-center flex-shrink-0" 
                              style="width: 35px; height: 35px; font-size: 0.8rem;">
                             {{ index + 1 }}
                         </div>
@@ -117,7 +155,7 @@ function formatEventDate(string $start, string $end): string {
                     <div class="d-flex flex-column gap-3">
                         
                         <div class="d-flex align-items-start gap-3 px-2">
-                            <div class="rounded-circle bg-primary-subtle text-theme-dynamic d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">
+                            <div class="rounded-circle bg-theme-light text-theme-dynamic d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">
                                 <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
                                     <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
                                     <circle cx="12" cy="10" r="3"></circle>
@@ -160,7 +198,7 @@ function formatEventDate(string $start, string $end): string {
                         </a>
 
                         <a href="mailto:<?= $c_email ?>" class="contact-link-card text-decoration-none d-flex align-items-start gap-3">
-                            <div class="rounded-circle bg-primary-subtle text-theme-dynamic d-flex align-items-center justify-content-center flex-shrink-0 shadow-sm" style="width: 36px; height: 36px;">
+                            <div class="rounded-circle bg-theme-light text-theme-dynamic d-flex align-items-center justify-content-center flex-shrink-0 shadow-sm" style="width: 36px; height: 36px;">
                                 <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
                                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                                     <polyline points="22,6 12,13 2,6"></polyline>
@@ -185,14 +223,14 @@ function formatEventDate(string $start, string $end): string {
         </div>
     </div>
 
-    <div class="container mt-5 pt-5 mb-5 border-top border-light border-2 fade-in-up">
+    <div class="container mt-5 pt-4 pt-md-5 mb-5 border-top border-light border-2 fade-in-up">
         
-        <div class="text-center mb-5">
+        <div class="text-center mb-4 mb-md-5">
             <h2 class="font-cinzel h3 fw-bold text-dark text-uppercase tracking-wider">Jadwal Acara</h2>
             <p class="text-muted">Jangan lewatkan berbagai momen seru di kawasan kami</p>
         </div>
 
-        <ul class="nav nav-pills justify-content-center flex-wrap gap-2 mb-5" id="eventTabs" role="tablist">
+        <ul class="nav nav-pills justify-content-center flex-wrap gap-2 mb-4 mb-md-5" id="eventTabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active fw-bold" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab">Semua Acara</button>
             </li>
@@ -360,13 +398,11 @@ function formatEventDate(string $start, string $end): string {
             }
         },
         mounted() {
-            // FIX: Paksa Lucide ngerender ulang ikonnya setelah Vue selesai loading
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
         },
         updated() {
-            // FIX: Render ulang kalau ada perubahan state
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }

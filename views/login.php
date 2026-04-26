@@ -1,5 +1,18 @@
 <?php
 session_start();
+
+require_once '../config/koneksi.php';
+/** @var mysqli $conn */
+
+// === PANGGIL PENGATURAN CMS BIAR LOGIN NYA DINAMIS ===
+require_once '../models/SettingsModel.php'; 
+$settingsModel = new SettingsModel($conn);
+$web_setting = $settingsModel->getSettings(); 
+
+$theme_color = !empty($web_setting['theme_color']) ? htmlspecialchars($web_setting['theme_color']) : '#254794';
+$font_family = !empty($web_setting['font_family']) ? htmlspecialchars($web_setting['font_family']) : 'Plus Jakarta Sans';
+// ======================================================
+
 if (isset($_SESSION['role'])) {
     if ($_SESSION['role'] == 'admin') { 
         header("Location: admin/dashboard.php"); 
@@ -22,11 +35,46 @@ if (strpos($referer, 'login.php') !== false || strpos($referer, 'register.php') 
     <title>Login - Citra Niaga</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="../assets/css/style.css">
-</head>
-<body class="bg-gray-50 h-screen overflow-hidden flex">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Lora:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
 
-    <div class="hidden lg:flex lg:w-5/12 relative flex-col justify-center items-center text-white p-12 overflow-hidden" style="background-color: #254794;">
+    <style>
+        /* SIHIR CSS DINAMIS */
+        :root {
+            --theme-color: <?= $theme_color ?>;
+            --font-custom: '<?= $font_family ?>', sans-serif;
+        }
+        body { font-family: var(--font-custom) !important; }
+        .font-cinzel { font-family: 'Cinzel', serif !important; }
+        
+        .bg-theme { background-color: var(--theme-color) !important; }
+        .text-theme { color: var(--theme-color) !important; }
+        .focus-ring-theme:focus { 
+            --tw-ring-color: var(--theme-color) !important; 
+            border-color: transparent !important;
+        }
+        .hover-text-theme:hover { color: var(--theme-color) !important; }
+
+        /* ======================================================== */
+        /* --- FIX RESPONSIVE KHUSUS LAYAR HP (MOBILE DEVICES) ---  */
+        /* ======================================================== */
+        @media (max-width: 768px) {
+            /* Menyesuaikan ukuran font biar gak tumpang tindih */
+            .login-title { font-size: 1.75rem !important; }
+            .login-desc { font-size: 0.9rem !important; }
+            
+            /* Kurangi padding form di HP biar lebih lega ke samping */
+            .form-container { padding: 2.5rem 1.5rem !important; }
+            
+            /* Input form dibuat sedikit lebih compact */
+            .input-field { padding-top: 0.85rem !important; padding-bottom: 0.85rem !important; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex">
+
+    <div class="hidden lg:flex lg:w-5/12 relative flex-col justify-center items-center text-white p-12 overflow-hidden bg-theme">
         <div class="absolute inset-0 bg-[url('../assets/img/login-bg.jpg')] opacity-20 bg-cover bg-center mix-blend-overlay"></div>
         
         <div class="relative z-10 w-full max-w-md text-center">
@@ -34,30 +82,30 @@ if (strpos($referer, 'login.php') !== false || strpos($referer, 'register.php') 
                 <i data-lucide="map-pin" class="w-10 h-10 text-white"></i>
             </div>
             <h1 class="font-cinzel text-4xl font-bold mb-2 tracking-wider">CITRA NIAGA</h1>
-            <p class="text-blue-100 mb-12 text-lg">Pusat Kebudayaan & Perdagangan</p>
+            <p class="text-white/80 mb-12 text-lg">Pusat Kebudayaan & Perdagangan</p>
             
             <div class="grid grid-cols-2 gap-4 text-left">
                 <div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/20">
                     <div class="text-2xl font-bold">5+</div>
-                    <div class="text-sm text-blue-200">Destinasi</div>
+                    <div class="text-sm text-white/70">Destinasi</div>
                 </div>
                 <div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/20">
                     <div class="text-2xl font-bold">12+</div>
-                    <div class="text-sm text-blue-200">Total Kios</div>
+                    <div class="text-sm text-white/70">Total Kios</div>
                 </div>
                 <div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/20">
                     <div class="text-2xl font-bold">20+</div>
-                    <div class="text-sm text-blue-200">Total Galeri</div>
+                    <div class="text-sm text-white/70">Total Galeri</div>
                 </div>
                 <div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/20">
                     <div class="text-2xl font-bold">4.6★</div>
-                    <div class="text-sm text-blue-200">Avg Rating</div>
+                    <div class="text-sm text-white/70">Avg Rating</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="w-full lg:w-7/12 flex items-center justify-center p-8 sm:p-12 lg:p-24 bg-white">
+    <div class="w-full lg:w-7/12 flex items-center justify-center p-6 sm:p-12 lg:p-24 bg-white form-container">
         <div class="w-full max-w-md">
             
             <?php if(isset($_GET['error'])): ?>
@@ -74,12 +122,15 @@ if (strpos($referer, 'login.php') !== false || strpos($referer, 'register.php') 
             </div>
             <?php endif; ?>
 
-            <div class="mb-10 text-center lg:text-left">
-                <h2 class="text-3xl font-bold text-gray-900 mb-3">SELAMAT DATANG</h2>
-                <p class="text-gray-500">Masuk ke akun Anda untuk melanjutkan.</p>
+            <div class="mb-8 md:mb-10 text-center lg:text-left">
+                <div class="lg:hidden mx-auto w-16 h-16 bg-theme rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                    <i data-lucide="map-pin" class="w-8 h-8 text-white"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2 md:mb-3 login-title">SELAMAT DATANG</h2>
+                <p class="text-gray-500 login-desc">Masuk ke akun Anda untuk melanjutkan.</p>
             </div>
 
-            <form action="../controllers/AuthController.php" method="POST" class="space-y-6">
+            <form action="../controllers/AuthController.php" method="POST" class="space-y-5 md:space-y-6">
                 
                 <input type="hidden" name="redirect_url" value="<?php echo htmlspecialchars($referer); ?>">
 
@@ -89,7 +140,7 @@ if (strpos($referer, 'login.php') !== false || strpos($referer, 'register.php') 
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <i data-lucide="mail" class="w-5 h-5 text-gray-400"></i>
                         </div>
-                        <input type="email" name="email" class="w-full pl-11 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#254794] focus:border-transparent outline-none transition" placeholder="nama@email.com" required>
+                        <input type="email" name="email" class="w-full pl-11 pr-4 py-3 md:py-4 bg-gray-50 border border-gray-200 rounded-xl focus-ring-theme transition input-field" placeholder="nama@email.com" required>
                     </div>
                 </div>
 
@@ -99,25 +150,25 @@ if (strpos($referer, 'login.php') !== false || strpos($referer, 'register.php') 
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <i data-lucide="lock" class="w-5 h-5 text-gray-400"></i>
                         </div>
-                        <input type="password" id="login-password" name="password" class="w-full pl-11 pr-12 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#254794] focus:border-transparent outline-none transition" placeholder="••••••••" required>
+                        <input type="password" id="login-password" name="password" class="w-full pl-11 pr-12 py-3 md:py-4 bg-gray-50 border border-gray-200 rounded-xl focus-ring-theme transition input-field" placeholder="••••••••" required>
                         
                         <div class="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer" onclick="togglePassword('login-password', 'login-eye')">
-                            <i data-lucide="eye" id="login-eye" class="h-5 w-5 text-gray-400 hover:text-[#254794] transition-colors"></i>
+                            <i data-lucide="eye" id="login-eye" class="h-5 w-5 text-gray-400 hover-text-theme transition-colors"></i>
                         </div>
                     </div>
                 </div>
 
-                <button type="submit" name="login" class="w-full py-4 px-6 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 flex justify-center items-center gap-2" style="background-color: #254794;">
+                <button type="submit" name="login" class="w-full py-3 md:py-4 px-6 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 flex justify-center items-center gap-2 bg-theme mt-2">
                     <i data-lucide="log-in" class="w-5 h-5"></i> Masuk / Login
                 </button>
             </form>
 
-            <div class="mt-8 text-center border-t pt-6">
+            <div class="mt-8 text-center border-t border-gray-100 pt-6">
                 <p class="text-sm text-gray-600 mb-4">
                     Belum punya akun? 
-                    <a href="register.php" class="font-bold hover:underline" style="color: #254794;">Daftar di sini</a>
+                    <a href="register.php" class="font-bold hover-text-theme text-theme hover:underline transition-colors">Daftar di sini</a>
                 </p>
-                <a href="index.php" class="text-sm text-gray-500 hover:text-[#254794] font-medium inline-flex items-center gap-2 transition">
+                <a href="index.php" class="text-sm text-gray-500 hover-text-theme font-medium inline-flex items-center gap-2 transition-colors">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke website publik
                 </a>
             </div>

@@ -10,9 +10,6 @@ require_once __DIR__ . '/../../config/koneksi.php';
 
 $current_page = strtolower(basename($_SERVER['PHP_SELF'])); 
 
-// ==========================================
-// SISTEM TRACKING PENGUNJUNG REAL-TIME & HALAMAN
-// ==========================================
 $ip_address = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
 $visit_date = date('Y-m-d');
 
@@ -20,7 +17,6 @@ $cek_visitor = @mysqli_query($conn, "SELECT id FROM visitor_logs WHERE ip_addres
 if ($cek_visitor && mysqli_num_rows($cek_visitor) == 0) {
     @mysqli_query($conn, "INSERT INTO visitor_logs (ip_address, visit_date, page_visited) VALUES ('$ip_address', '$visit_date', '$current_page')");
 }
-// ==========================================
 
 require_once __DIR__ . '/../../models/SettingsModel.php';
 
@@ -82,15 +78,10 @@ $font_url = str_replace(' ', '+', $font_family);
         .text-red-500 { color: #ef4444 !important; }
         .text-green-500 { color: #22c55e !important; }
         .bg-blue-600 { background-color: var(--theme-color) !important; }
-
-        /* ========================================================= */
-        /* CSS MAGIC: Teks Normal tapi Anti-Jumping pas jadi Bold    */
-        /* ========================================================= */
         .nav-link-item {
             display: inline-block;
             text-align: center;
         }
-        /* Membuat "Bayangan" spasi seukuran huruf tebal biar gak geser */
         .nav-link-item::before {
             content: attr(data-text);
             display: block;
@@ -102,7 +93,7 @@ $font_url = str_replace(' ', '+', $font_family);
 
         .nav-active {
             color: var(--theme-color) !important;
-            font-weight: 700 !important; /* Tebal pas Aktif */
+            font-weight: 700 !important; 
             position: relative;
         }
         .nav-active::after {
@@ -113,7 +104,7 @@ $font_url = str_replace(' ', '+', $font_family);
         .nav-inactive {
             color: var(--header-text-color) !important; 
             opacity: 0.65; 
-            font-weight: 500 !important; /* KEMBALI TIPIS ELEGAN PAS TIDAK AKTIF */
+            font-weight: 500 !important;
             transition: all 0.3s; position: relative;
         }
         .nav-inactive:hover {
@@ -127,7 +118,6 @@ $font_url = str_replace(' ', '+', $font_family);
         }
         .nav-inactive:hover::after { width: 100%; }
 
-        /* Mobile Styles */
         .mobile-active {
             display: block; padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 1rem; 
             font-weight: 700; color: var(--theme-color) !important; background-color: #eff6ff; text-decoration: none;

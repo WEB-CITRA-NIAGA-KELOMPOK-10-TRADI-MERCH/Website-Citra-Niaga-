@@ -11,6 +11,11 @@ $site_title  = !empty($web_setting['site_title']) ? htmlspecialchars($web_settin
 $site_desc   = !empty($web_setting['site_desc']) ? htmlspecialchars($web_setting['site_desc']) : 'Pusat UMKM, kuliner, dan budaya di Samarinda.';
 $hero_banner = !empty($web_setting['hero_banner']) ? htmlspecialchars($web_setting['hero_banner']) : 'citraniagabackground.png';
 
+// === PANGGIL WARNA TEKS DINAMIS DARI DATABASE ===
+$text_color = !empty($web_setting['text_color']) ? htmlspecialchars($web_setting['text_color']) : '#64748b';
+$header_text_color = !empty($web_setting['header_text_color']) ? htmlspecialchars($web_setting['header_text_color']) : '#0f172a';
+// ================================================
+
 $limitedReviews = [];
 $q_rev = mysqli_query($conn, "SELECT * FROM reviews WHERE is_pinned = 1 ORDER BY created_at DESC LIMIT 3");
 if($q_rev) {
@@ -56,14 +61,25 @@ require_once 'templates/header.php';
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
-    img {
-        -webkit-user-drag: none;
-        -khtml-user-drag: none;
-        -moz-user-drag: none;
-        -o-user-drag: none;
-        user-select: none;
+    :root {
+        --theme-color: <?= $theme_color ?>;
+        --text-color: <?= $text_color ?>;
+        --header-text-color: <?= $header_text_color ?>;
     }
 
+    /* =================================================== */
+    /* SIHIR OVERRIDE WARNA TEKS (Nggak perlu ganti class) */
+    /* =================================================== */
+    p, .text-secondary, .text-muted, body { color: var(--text-color) !important; }
+    h1, h2, h3, h4, h5, h6, .text-dark, .font-cinzel { color: var(--header-text-color) !important; }
+    
+    /* Pengecualian Elemen Biar Gak Rusak */
+    .text-white, .btn.text-white, .text-white-force { color: #ffffff !important; }
+    .text-white-50 { color: rgba(255, 255, 255, 0.7) !important; }
+    .preloader-title { color: var(--header-text-color) !important; }
+    .preloader-subtitle { color: var(--theme-color) !important; }
+
+    img { -webkit-user-drag: none; -khtml-user-drag: none; -moz-user-drag: none; -o-user-drag: none; user-select: none; }
     [v-cloak] { display: none !important; }
 
     .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -98,8 +114,7 @@ require_once 'templates/header.php';
     }
 
     .preloader-logo {
-        width: 160px; height: auto; margin: 0 auto;
-        transform-style: preserve-3d;
+        width: 160px; height: auto; margin: 0 auto; transform-style: preserve-3d;
         filter: drop-shadow(0 15px 25px rgba(37, 71, 148, 0.15));
         animation: float3DPremium 3s ease-in-out infinite;
     }
@@ -111,47 +126,60 @@ require_once 'templates/header.php';
     }
 
     .preloader-title {
-        color: #1e293b; 
         letter-spacing: 8px; font-weight: 900; font-size: 1.8rem; margin-bottom: 0; margin-top: 1.5rem;
-        opacity: 0; transform: translateY(15px);
-        animation: fadeUpPremium 0.8s ease 0.3s forwards;
+        opacity: 0; transform: translateY(15px); animation: fadeUpPremium 0.8s ease 0.3s forwards;
     }
     
     .preloader-subtitle {
-        color: <?= $theme_color ?>; 
         letter-spacing: 14px; font-size: 0.85rem; text-transform: uppercase; font-weight: 700;
-        opacity: 0; transform: translateY(15px); margin-top: 8px;
-        animation: fadeUpPremium 0.8s ease 0.5s forwards;
+        opacity: 0; transform: translateY(15px); margin-top: 8px; animation: fadeUpPremium 0.8s ease 0.5s forwards;
     }
 
-    @keyframes fadeUpPremium {
-        to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeUpPremium { to { opacity: 1; transform: translateY(0); } }
 
     .progress-container {
-        width: 240px; height: 4px; margin: 35px auto 0;
-        background: rgba(37, 71, 148, 0.1); border-radius: 10px; overflow: hidden;
-        opacity: 0; animation: fadeUpPremium 0.8s ease 0.7s forwards;
-        position: relative;
+        width: 240px; height: 4px; margin: 35px auto 0; background: rgba(37, 71, 148, 0.1); border-radius: 10px; overflow: hidden;
+        opacity: 0; animation: fadeUpPremium 0.8s ease 0.7s forwards; position: relative;
     }
     
     .progress-bar-fill {
-        width: 0%; height: 100%; 
-        background: linear-gradient(90deg, <?= $theme_color ?>, #3b82f6);
-        box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+        width: 0%; height: 100%; background: linear-gradient(90deg, <?= $theme_color ?>, #3b82f6);
+        box-shadow: 0 0 12px rgba(59, 130, 246, 0.5); border-radius: 10px;
         animation: loadBarPremium 2s cubic-bezier(0.77, 0, 0.175, 1) 0.8s forwards;
-        border-radius: 10px;
     }
 
-    @keyframes loadBarPremium {
-        0% { width: 0%; }
-        40% { width: 60%; }
-        100% { width: 100%; }
-    }
+    @keyframes loadBarPremium { 0% { width: 0%; } 40% { width: 60%; } 100% { width: 100%; } }
 
-    .fixed-preloader.hide-preloader {
-        opacity: 0; visibility: hidden; pointer-events: none;
-        transform: scale(1.03); 
+    .fixed-preloader.hide-preloader { opacity: 0; visibility: hidden; pointer-events: none; transform: scale(1.03); }
+
+    /* ======================================================== */
+    /* --- FIX RESPONSIVE KHUSUS LAYAR HP (MOBILE DEVICES) ---  */
+    /* ======================================================== */
+    .hero-content-box { margin-top: -6rem; }
+    .sejarah-img-box { height: 400px; }
+    .hero-title-text { font-size: clamp(3rem, 6vw, 4.5rem); }
+    
+    @media (max-width: 768px) {
+        /* Margin Hero dihapus di HP biar gak nabrak header */
+        .hero-content-box { margin-top: 0 !important; padding-top: 3rem !important; }
+        
+        /* Tinggi gambar sejarah disusutkan biar gak makan layar */
+        .sejarah-img-box { height: 260px !important; }
+        
+        /* Teks Preloader dirapetin biar gak turun ke bawah */
+        .preloader-title { font-size: 1.5rem !important; letter-spacing: 4px !important; }
+        .preloader-subtitle { font-size: 0.75rem !important; letter-spacing: 8px !important; }
+        
+        /* Tombol CTA diubah jadi full width di HP */
+        .cta-buttons-container { flex-direction: column !important; width: 100%; }
+        .cta-buttons-container a { width: 100%; justify-content: center; margin-bottom: 10px; }
+        
+        /* Teks judul hero disesuaikan */
+        .hero-title-text { font-size: 2.2rem !important; line-height: 1.2; text-align: center; }
+        .hero-desc-text { text-align: center; font-size: 1rem !important; margin-left: auto; margin-right: auto; }
+        
+        /* Label lokasi dibikin rata tengah */
+        .hero-location-badge { margin: 0 auto 1.5rem auto !important; display: flex !important; width: fit-content; }
     }
 </style>
 
@@ -169,10 +197,8 @@ require_once 'templates/header.php';
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const preloader = document.getElementById("cinematic-preloader");
-        
         if (!sessionStorage.getItem("citraNiagaLoaded")) {
             document.body.classList.add("body-locked");
-            
             setTimeout(() => {
                 preloader.classList.add("hide-preloader");
                 document.body.classList.remove("body-locked");
@@ -183,6 +209,7 @@ require_once 'templates/header.php';
         }
     });
 </script>
+
 <main id="app" v-cloak class="w-100 bg-white font-plus-jakarta-sans">
     
     <transition name="fade">
@@ -209,27 +236,27 @@ require_once 'templates/header.php';
                  class="w-100 h-100 object-fit-cover parallax-bg" 
                  :style="{ transform: `scale(1.05) translate(${mouseX * 20}px, ${mouseY * 20}px)`, transition: isMouseLeft ? 'transform 0.5s ease-out' : 'none' }"
                  style="object-position: center;">
-            <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.85) 40%, rgba(255,255,255,0) 100%); pointer-events: none;"></div>
+            <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0) 100%); pointer-events: none;"></div>
         </div>
         
-        <div class="container position-relative z-1" style="margin-top: -6rem; pointer-events: none;">
+        <div class="container position-relative z-1 hero-content-box" style="pointer-events: none;">
             <div class="row">
                 <div class="col-lg-8 col-md-10" style="pointer-events: auto;">
                     
-                    <div class="d-inline-flex align-items-center gap-2 px-4 py-2 rounded-pill mb-4 backdrop-blur-sm border shadow-sm fade-in-up">
+                    <div class="d-inline-flex align-items-center gap-2 px-4 py-2 rounded-pill mb-4 backdrop-blur-sm border shadow-sm fade-in-up hero-location-badge">
                         <i data-lucide="map-pin" style="width: 16px; height: 16px; color: <?= $theme_color ?>;"></i> 
                         <span class="fw-bold" style="font-size: 0.85rem; color: #333;">Samarinda, Kalimantan Timur</span>
                     </div>
                     
-                    <h1 class="font-cinzel fw-bold text-dark mb-4 text-uppercase fade-in-up" style="font-size: clamp(3rem, 6vw, 4.5rem); letter-spacing: 0.05em; line-height: 1.1; transition-delay: 0.1s;">
+                    <h1 class="font-cinzel fw-bold text-dark mb-4 text-uppercase fade-in-up hero-title-text" style="letter-spacing: 0.05em; transition-delay: 0.1s;">
                         <?= $site_title ?>
                     </h1>
                     
-                    <p class="text-secondary mb-5 fw-medium fade-in-up" style="font-size: 1.15rem; line-height: 1.7; max-width: 600px; transition-delay: 0.2s;">
+                    <p class="text-secondary mb-5 fw-medium fade-in-up hero-desc-text" style="line-height: 1.7; max-width: 600px; transition-delay: 0.2s;">
                         <?= $site_desc ?>
                     </p>
                     
-                    <div class="d-flex flex-column flex-sm-row gap-3 mt-4 fade-in-up" style="transition-delay: 0.3s;">
+                    <div class="d-flex flex-column flex-sm-row gap-3 mt-4 fade-in-up cta-buttons-container" style="transition-delay: 0.3s;">
                         <a href="detail.php" class="btn rounded-pill px-5 py-3 fw-bold shadow-sm hover-lift text-white" style="background-color: <?= $theme_color ?>; border: none;">Pelajari Lebih Lanjut</a>
                         <a href="gallery.php" class="btn btn-light border rounded-pill px-5 py-3 fw-bold shadow-sm text-dark hover-lift">Lihat Galeri</a>
                     </div>
@@ -239,10 +266,10 @@ require_once 'templates/header.php';
     </section>
 
     <section class="py-5 bg-white position-relative z-1 border-bottom">
-        <div class="container py-5">
+        <div class="container py-4 py-md-5">
             <div class="row align-items-center g-5">
                 <div class="col-lg-6 fade-in-up">
-                    <div class="position-relative rounded-4 overflow-hidden shadow-lg group hover-lift" style="height: 400px;" 
+                    <div class="position-relative rounded-4 overflow-hidden shadow-lg group hover-lift sejarah-img-box" 
                          @click="openLightbox('../assets/img/Gallery/Area_Bangunan/Budaya.png', 'Sejarah Citra Niaga', 'Pusat pelestarian budaya dan sejarah kota Samarinda.')">
                         
                         <img src="../assets/img/Gallery/Area_Bangunan/Budaya.png" onerror="this.onerror=null;this.src='../assets/img/Gallery/Area_Bangunan/citraniagabackground.png';" class="w-100 h-100 object-fit-cover img-zoom" alt="Sejarah Citra Niaga">
@@ -255,29 +282,29 @@ require_once 'templates/header.php';
                     </div>
                 </div>
                 
-                <div class="col-lg-6 fade-in-up" style="transition-delay: 0.1s;">
+                <div class="col-lg-6 fade-in-up text-center text-md-start" style="transition-delay: 0.1s;">
                     <p class="fw-bold text-uppercase mb-2" style="font-size: 0.85rem; letter-spacing: 0.1em; color: <?= $theme_color ?>;">Sejarah Singkat</p>
-                    <h2 class="font-cinzel fw-bold text-dark text-uppercase mb-4" style="font-size: 2.5rem;">Jejak Langkah Citra Niaga</h2>
+                    <h2 class="font-cinzel fw-bold text-dark text-uppercase mb-4" style="font-size: 2.2rem;">Jejak Langkah Citra Niaga</h2>
                     <p class="text-secondary mb-4" style="line-height: 1.8; text-align: justify;">
                         <?= htmlspecialchars($history_text_1) ?>
                     </p>
                     <p class="text-secondary mb-5" style="line-height: 1.8; text-align: justify;">
                         <?= htmlspecialchars($history_text_2) ?>
                     </p>
-                    <a href="profile.php" class="btn bg-white rounded-pill px-4 py-2 fw-bold hover-lift border shadow-sm" style="color: <?= $theme_color ?>;">Baca Sejarah Lengkap</a>
+                    <a href="profile.php" class="btn bg-white rounded-pill px-4 py-2 fw-bold hover-lift border shadow-sm w-100 w-md-auto" style="color: <?= $theme_color ?>;">Baca Sejarah Lengkap</a>
                 </div>
             </div>
         </div>
     </section>
 
     <section class="py-5 bg-light position-relative z-1">
-        <div class="container py-5">
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-5 gap-3 fade-in-up">
+        <div class="container py-4 py-md-5">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center align-items-md-end mb-4 mb-md-5 gap-3 fade-in-up text-center text-md-start">
                 <div>
                     <p class="fw-bold text-uppercase mb-2" style="font-size: 0.85rem; letter-spacing: 0.1em; color: <?= $theme_color ?>;">Sekilas Pandang</p>
-                    <h2 class="font-cinzel fw-bold text-dark text-uppercase mb-0" style="font-size: 2.5rem;">Perjalanan Visual</h2>
+                    <h2 class="font-cinzel fw-bold text-dark text-uppercase mb-0" style="font-size: 2.2rem;">Perjalanan Visual</h2>
                 </div>
-                <a href="gallery.php" class="btn btn-white border rounded-pill px-4 py-2 text-dark fw-bold shadow-sm hover-lift" style="background: white;">Lihat Semua Foto</a>
+                <a href="gallery.php" class="btn btn-white border rounded-pill px-4 py-2 text-dark fw-bold shadow-sm hover-lift w-100 w-md-auto" style="background: white;">Lihat Semua Foto</a>
             </div>
 
             <div class="row g-4 fade-in-up" style="transition-delay: 0.2s;">
@@ -316,10 +343,10 @@ require_once 'templates/header.php';
     </section>
 
     <section class="py-5 bg-white position-relative z-1">
-        <div class="container py-5">
-            <div class="text-center mb-5 mx-auto fade-in-up" style="max-width: 600px;">
+        <div class="container py-4 py-md-5">
+            <div class="text-center mb-4 mb-md-5 mx-auto fade-in-up" style="max-width: 600px;">
                 <p class="fw-bold text-uppercase mb-2" style="font-size: 0.85rem; letter-spacing: 0.1em; color: <?= $theme_color ?>;">Testimoni</p>
-                <h2 class="font-cinzel fw-bold text-dark text-uppercase mb-3" style="font-size: 2.5rem;">Kata Pengunjung</h2>
+                <h2 class="font-cinzel fw-bold text-dark text-uppercase mb-3" style="font-size: 2.2rem;">Kata Pengunjung</h2>
             </div>
             
             <div class="row g-4 fade-in-up" style="transition-delay: 0.2s;">

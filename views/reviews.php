@@ -103,6 +103,29 @@ require_once 'templates/header.php';
         color: white;
         box-shadow: 0 4px 10px rgba(37,71,148,0.3); transform: scale(1.1);
     }
+
+    /* ======================================================== */
+    /* --- FIX RESPONSIVE KHUSUS LAYAR HP (MOBILE DEVICES) ---  */
+    /* ======================================================== */
+    @media (max-width: 768px) {
+        /* Judul utama disusutkan biar gak kepotong */
+        .hero-title { font-size: 1.8rem !important; letter-spacing: 1px !important; }
+        .hero-subtitle { font-size: 1rem !important; }
+        
+        /* Tombol filter bintang dibikin lebih imut di HP */
+        .filter-btn { padding: 6px 14px !important; font-size: 0.75rem !important; }
+        
+        /* Kurangi padding di kartu ulasan biar teksnya lega */
+        .review-card { padding: 1.25rem !important; }
+        
+        /* Beri jarak atas buat form Tulis Ulasan biar gak mepet banget sama paginasi */
+        .write-review-card { margin-top: 2rem !important; padding: 1.5rem !important; }
+        
+        /* Tombol paginasi disesuaikan untuk jempol */
+        .page-nav-btn { width: 40px !important; height: 40px !important; }
+        .page-num-btn { width: 32px !important; height: 32px !important; font-size: 0.9rem !important; }
+        .page-numbers-container { padding: 4px 12px !important; }
+    }
 </style>
 
 <main id="app" v-cloak class="w-100 bg-light pb-5 font-plus-jakarta-sans min-vh-100">
@@ -110,10 +133,10 @@ require_once 'templates/header.php';
     <section class="container pt-5 pb-4 text-center mt-5">
         <div class="row justify-content-center">
             <div class="col-lg-8 fade-in-up mt-4">
-                <h1 class="font-cinzel fw-bold text-dark text-uppercase mb-3" style="font-size: 2.5rem; letter-spacing: 2px;">
+                <h1 class="font-cinzel fw-bold text-dark text-uppercase mb-3 hero-title" style="font-size: 2.5rem; letter-spacing: 2px;">
                     Pengalaman Pengunjung
                 </h1>
-                <p class="text-secondary fs-5">
+                <p class="text-secondary fs-5 hero-subtitle">
                     Baca apa kata mereka tentang kunjungan ke Citra Niaga, atau bagikan pengalaman serumu sendiri di sini.
                 </p>
             </div>
@@ -146,7 +169,7 @@ require_once 'templates/header.php';
                 </div>
 
                 <transition-group name="list" tag="div" class="d-flex flex-column gap-4" appear>
-                    <div v-for="rev in paginatedReviews" :key="rev.id" class="bg-white rounded-4 p-4 border shadow-sm transition hover-shadow position-relative overflow-hidden">
+                    <div v-for="rev in paginatedReviews" :key="rev.id" class="bg-white rounded-4 p-4 border shadow-sm transition hover-shadow position-relative overflow-hidden review-card">
                         
                         <div class="position-absolute" style="top: -10px; right: 10px; color: <?= $theme_color ?>; opacity: 0.03; transform: rotate(10deg);">
                             <svg width="100" height="100" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
@@ -154,7 +177,7 @@ require_once 'templates/header.php';
 
                         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start mb-3 position-relative z-1">
                             <div class="d-flex align-items-center gap-3">
-                                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 45px; height: 45px; background: linear-gradient(135deg, <?= $theme_color ?>, #3b82f6); color: #ffffff !important; font-size: 1.1rem; border: 2px solid #e2e8f0;">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm shrink-0" style="width: 45px; height: 45px; background: linear-gradient(135deg, <?= $theme_color ?>, #3b82f6); color: #ffffff !important; font-size: 1.1rem; border: 2px solid #e2e8f0;">
                                     {{ rev.name.charAt(0).toUpperCase() }}
                                 </div>
                                 <div>
@@ -183,7 +206,7 @@ require_once 'templates/header.php';
                     </p>
                 </div>
 
-                <div v-if="totalPages > 1" class="d-flex justify-content-center align-items-center gap-4 mt-5">
+                <div v-if="totalPages > 1" class="d-flex justify-content-center align-items-center gap-3 md:gap-4 mt-5">
                     
                     <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1" class="page-nav-btn">
                         <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
@@ -205,7 +228,7 @@ require_once 'templates/header.php';
             </div>
 
             <div class="col-lg-4 fade-in-up">
-                <div class="card border-0 shadow-lg rounded-4 p-4 sticky-top" style="top: 100px; z-index: 10; border-radius: 16px !important;">
+                <div class="card border-0 shadow-lg rounded-4 p-4 sticky-top write-review-card" style="top: 100px; z-index: 10; border-radius: 16px !important;">
                     <h2 class="font-cinzel h5 fw-bold text-dark text-uppercase mb-4 text-center border-bottom pb-3">Tulis Ulasan</h2>
                     
                     <?php if(isset($_SESSION['role'])) : ?>

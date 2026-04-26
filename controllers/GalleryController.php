@@ -10,12 +10,9 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
-// ==========================================
-// FUNGSI UPLOAD GALERI (MAX 1MB, ONLY IMG)
-// ==========================================
 function handleUpload() {
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $target_dir = "../assets/img/Gallery/"; // Folder khusus Galeri
+        $target_dir = "../assets/img/Gallery/"; 
         
         if (!is_dir($target_dir)) {
             mkdir($target_dir, 0777, true);
@@ -25,7 +22,6 @@ function handleUpload() {
         $file_tmp = $_FILES["image"]["tmp_name"];
         $file_size = $_FILES["image"]["size"];
         
-        // 1. Validasi Ekstensi
         $allowed_extensions = ['jpg', 'jpeg', 'png', 'webp'];
         $file_extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
         
@@ -34,13 +30,11 @@ function handleUpload() {
             exit;
         }
 
-        // 2. Validasi Ukuran (Max 1MB = 1.048.576 Bytes)
         if ($file_size > 1048576) {
             echo "<script>alert('GAGAL: Ukuran gambar terlalu besar! Maksimal upload adalah 1 MB.'); window.location.href='../views/admin/gallery.php';</script>";
             exit;
         }
 
-        // 3. Validasi MIME Type Asli
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime_type = finfo_file($finfo, $file_tmp);
         finfo_close($finfo);
@@ -51,7 +45,6 @@ function handleUpload() {
             exit;
         }
 
-        // 4. Generate Nama & Simpan
         $new_file_name = time() . "_" . uniqid() . "." . $file_extension;
         $target_file = $target_dir . $new_file_name;
 
@@ -62,7 +55,6 @@ function handleUpload() {
     return false;
 }
 
-// PROSES TAMBAH FOTO GALERI
 if (isset($_POST['tambah']) || isset($_POST['add'])) {
     $title = mysqli_real_escape_string($conn, $_POST['title']);
     $category = mysqli_real_escape_string($conn, $_POST['category']);
@@ -73,7 +65,6 @@ if (isset($_POST['tambah']) || isset($_POST['add'])) {
     if ($uploaded) {
         $image = mysqli_real_escape_string($conn, $uploaded);
     } else {
-        // Wajib upload foto kalau tambah baru
         echo "<script>alert('GAGAL: Anda wajib mengupload foto untuk galeri baru!'); window.location.href='../views/admin/gallery.php';</script>";
         exit;
     }
@@ -83,7 +74,6 @@ if (isset($_POST['tambah']) || isset($_POST['add'])) {
     exit;
 }
 
-// PROSES UPDATE/EDIT FOTO GALERI
 if (isset($_POST['update'])) {
     $id = (int)$_POST['id'];
     $title = mysqli_real_escape_string($conn, $_POST['title']);
@@ -92,7 +82,6 @@ if (isset($_POST['update'])) {
     
     $image = mysqli_real_escape_string($conn, $_POST['old_image'] ?? '');
     
-    // Kalau admin milih file baru, timpa file lamanya
     $uploaded = handleUpload();
     if ($uploaded) {
         $image = mysqli_real_escape_string($conn, $uploaded);
@@ -103,7 +92,6 @@ if (isset($_POST['update'])) {
     exit;
 }
 
-// PROSES HAPUS FOTO GALERI
 if (isset($_GET['hapus'])) {
     $id = (int)$_GET['hapus'];
     mysqli_query($conn, "DELETE FROM gallery WHERE id=$id");

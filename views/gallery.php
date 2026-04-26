@@ -1,8 +1,17 @@
 <?php 
 require_once '../config/koneksi.php';
 /** @var mysqli $conn */
-require_once '../models/GalleryModel.php'; 
 
+// === PANGGIL PENGATURAN CMS ===
+require_once '../models/SettingsModel.php'; 
+$settingsModel = new SettingsModel($conn);
+$web_setting = $settingsModel->getSettings(); 
+
+$theme_color = !empty($web_setting['theme_color']) ? htmlspecialchars($web_setting['theme_color']) : '#254794';
+$font_family = !empty($web_setting['font_family']) ? htmlspecialchars($web_setting['font_family']) : 'Plus Jakarta Sans';
+// ===============================
+
+require_once '../models/GalleryModel.php'; 
 $galleryModel = new GalleryModel($conn);
 $galleries = $galleryModel->getAllGallery();
 
@@ -20,24 +29,56 @@ if ($galleries) {
 $categories = array_keys($groupedGalleries);
 $finalOrder = [];
 
-if (in_array('Event', $categories)) {
-    $finalOrder[] = 'Event';
-}
-
+if (in_array('Event', $categories)) { $finalOrder[] = 'Event'; }
 foreach ($categories as $cat) {
-    if ($cat !== 'Event' && $cat !== 'Lainnya') {
-        $finalOrder[] = $cat;
-    }
+    if ($cat !== 'Event' && $cat !== 'Lainnya') { $finalOrder[] = $cat; }
 }
-
-if (in_array('Lainnya', $categories)) {
-    $finalOrder[] = 'Lainnya';
-}
+if (in_array('Lainnya', $categories)) { $finalOrder[] = 'Lainnya'; }
 
 require_once 'templates/header.php'; 
 ?>
 
 <style>
+    /* ========================================== */
+    /* SIHIR CSS DINAMIS NGIKUTIN DASHBOARD       */
+    /* ========================================== */
+    :root {
+        --theme-color: <?= $theme_color ?>;
+        --font-custom: '<?= $font_family ?>', sans-serif;
+    }
+
+    main {
+        font-family: var(--font-custom) !important;
+    }
+
+    .text-theme { color: var(--theme-color) !important; }
+    .bg-theme { background-color: var(--theme-color) !important; }
+    .border-theme { border-color: var(--theme-color) !important; }
+    
+    /* Tombol Filter Dinamis */
+    .active-theme-btn {
+        background-color: var(--theme-color) !important;
+        border-color: var(--theme-color) !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.15);
+    }
+    .inactive-theme-btn {
+        background-color: #ffffff !important;
+        border-color: #e5e7eb !important;
+        color: #4b5563 !important;
+    }
+    .inactive-theme-btn:hover {
+        border-color: var(--theme-color) !important;
+        color: var(--theme-color) !important;
+    }
+
+    /* Hover Dinamis */
+    .group:hover .group-hover\:text-theme { color: var(--theme-color) !important; }
+    
+    .gradient-overlay {
+        background: linear-gradient(to top, var(--theme-color), transparent);
+    }
+
     .lightbox-overlay {
         background-color: rgba(0, 0, 0, 0.9);
         backdrop-filter: blur(5px);
@@ -54,33 +95,69 @@ require_once 'templates/header.php';
         transform: scale(0.9);
         transition: transform 0.3s ease;
     }
+
+    /* ======================================================== */
+    /* --- FIX RESPONSIVE KHUSUS LAYAR HP (MOBILE DEVICES) ---  */
+    /* ======================================================== */
+    @media (max-width: 768px) {
+        /* Jarak atas bawah dikurangin biar gak terlalu kosong di HP */
+        .main-container { padding-top: 6rem !important; padding-bottom: 3rem !important; }
+        
+        /* Judul utama disesuaikan ukurannya */
+        .hero-title { font-size: 2.2rem !important; margin-bottom: 0.5rem !important; }
+        .hero-desc { font-size: 1rem !important; padding: 0 1rem; }
+        
+        /* Tombol filter diperkecil padding & font-nya biar muat di layar HP */
+        .filter-btn { 
+            padding: 8px 16px !important; 
+            font-size: 0.85rem !important; 
+            margin-bottom: 0.25rem;
+        }
+        
+        /* Lightbox text disesuaikan */
+        #lightbox-title { font-size: 1.25rem !important; }
+        #lightbox-desc { font-size: 0.85rem !important; }
+        
+        /* Tombol close lightbox diperbesar area kliknya buat jempol */
+        #close-lightbox { 
+            top: 1rem !important; 
+            right: 1rem !important; 
+            padding: 10px !important; 
+            background-color: rgba(0,0,0,0.5) !important; 
+            border-radius: 50%; 
+        }
+
+        /* Jarak antar judul kategori dan foto diperkecil */
+        .category-header { margin-bottom: 1.5rem !important; }
+        .category-title { font-size: 1.25rem !important; }
+    }
 </style>
 
-<main class="w-full pt-20 pb-20 bg-[#fafafa] font-plus-jakarta-sans min-h-screen">
+<main class="w-full pt-20 pb-20 bg-[#fafafa] min-h-screen main-container">
     
     <div id="custom-lightbox" class="fixed top-0 left-0 w-full h-full lightbox-overlay flex-col items-center justify-center" style="display: none !important;">
         <button id="close-lightbox" class="absolute top-4 right-4 p-2 bg-transparent border-0 text-white opacity-75 hover:opacity-100 transition-opacity" style="cursor: pointer; z-index: 10000;">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
         <img id="lightbox-img" src="" class="lightbox-img rounded-xl object-contain">
-        <div class="text-center mt-6 px-4" style="max-width: 800px;" onclick="event.stopPropagation()">
+        <div class="text-center mt-4 md:mt-6 px-4" style="max-width: 800px;" onclick="event.stopPropagation()">
             <h3 id="lightbox-title" class="font-cinzel font-bold text-white text-2xl mb-2 tracking-wider"></h3>
             <p id="lightbox-desc" class="text-white/70 text-base md:text-lg m-0"></p>
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
-        <div class="text-center max-w-3xl mx-auto mb-10 fade-in-up">
-            <h1 class="font-cinzel text-4xl md:text-5xl font-bold text-gray-900 mb-4 uppercase tracking-widest">Galeri</h1>
-            <p class="text-lg text-gray-600">Perjalanan visual melintasi sudut-sudut ikonik Citra Niaga.</p>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 md:mt-10">
+        <div class="text-center max-w-3xl mx-auto mb-8 md:mb-10 fade-in-up">
+            <h1 class="font-cinzel text-4xl md:text-5xl font-bold text-gray-900 mb-4 uppercase tracking-widest hero-title">Galeri</h1>
+            <p class="text-lg text-gray-600 hero-desc">Perjalanan visual melintasi sudut-sudut ikonik Citra Niaga.</p>
         </div>
 
-        <div class="flex flex-wrap justify-center gap-3 mb-16 fade-in-up" id="gallery-filters">
-            <button class="filter-btn px-6 py-2.5 rounded-full border-2 border-[#254794] bg-[#254794] text-white font-bold transition-all shadow-md shadow-blue-900/20" data-filter="all">
+        <div class="flex flex-wrap justify-center gap-2 md:gap-3 mb-10 md:mb-16 fade-in-up" id="gallery-filters">
+            <button class="filter-btn px-6 py-2.5 rounded-full border-2 active-theme-btn font-bold transition-all" data-filter="all">
                 Semua Kategori
             </button>
             <?php foreach($finalOrder as $cat): ?>
-                <button class="filter-btn px-6 py-2.5 rounded-full border-2 border-gray-200 bg-white text-gray-600 font-bold hover:border-[#254794] hover:text-[#254794] transition-all" data-filter="<?= htmlspecialchars($cat) ?>">
+                <button class="filter-btn px-6 py-2.5 rounded-full border-2 inactive-theme-btn font-bold transition-all" data-filter="<?= htmlspecialchars($cat) ?>">
                     <?= str_replace('_', ' ', htmlspecialchars($cat)) ?>
                 </button>
             <?php endforeach; ?>
@@ -90,13 +167,13 @@ require_once 'templates/header.php';
             <?php foreach($finalOrder as $categoryName): 
                 $items = $groupedGalleries[$categoryName] ?? [];
             ?>
-                <div class="mb-16 category-section transition-all duration-500" data-category="<?= htmlspecialchars($categoryName) ?>">
-                    <div class="flex items-center gap-4 mb-8">
-                        <h2 class="font-cinzel text-2xl font-bold text-gray-900 uppercase tracking-widest"><?= str_replace('_', ' ', htmlspecialchars($categoryName)) ?></h2>
+                <div class="mb-12 md:mb-16 category-section transition-all duration-500" data-category="<?= htmlspecialchars($categoryName) ?>">
+                    <div class="flex items-center gap-4 mb-8 category-header">
+                        <h2 class="font-cinzel text-xl md:text-2xl font-bold text-gray-900 uppercase tracking-widest category-title"><?= str_replace('_', ' ', htmlspecialchars($categoryName)) ?></h2>
                         <div class="h-px bg-gray-300 flex-grow"></div>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                         <?php foreach($items as $item): ?>
                         <div class="group cursor-zoom-in fade-in-up bg-white p-3 rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300"
                              onclick="openBox('<?= htmlspecialchars($item['image'] ?? '', ENT_QUOTES) ?>', '<?= htmlspecialchars($item['title'] ?? 'Tanpa Judul', ENT_QUOTES) ?>', '<?= htmlspecialchars($item['description'] ?? '', ENT_QUOTES) ?>')">
@@ -107,9 +184,9 @@ require_once 'templates/header.php';
                                      alt="<?= htmlspecialchars($item['title'] ?? '') ?>" 
                                      class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                 
-                                <div class="absolute inset-0 bg-gradient-to-t from-[#1a2b4d]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                                <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-end p-6">
                                     <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                        <div class="w-10 h-10 rounded-full bg-white text-[#254794] flex items-center justify-center shadow-lg mb-3">
+                                        <div class="w-10 h-10 rounded-full bg-white text-theme flex items-center justify-center shadow-lg mb-3">
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
                                         </div>
                                     </div>
@@ -117,7 +194,7 @@ require_once 'templates/header.php';
                             </div>
                             
                             <div class="px-2 pb-2">
-                                <h3 class="font-bold text-gray-900 text-lg mb-1 group-hover:text-[#254794] transition-colors"><?= isset($item['title']) ? htmlspecialchars($item['title']) : 'Tanpa Judul' ?></h3>
+                                <h3 class="font-bold text-gray-900 text-base md:text-lg mb-1 group-hover:text-theme transition-colors"><?= isset($item['title']) ? htmlspecialchars($item['title']) : 'Tanpa Judul' ?></h3>
                                 <p class="text-sm text-gray-500 line-clamp-2"><?= isset($item['description']) ? htmlspecialchars($item['description']) : '' ?></p>
                             </div>
                         </div>
@@ -131,22 +208,23 @@ require_once 'templates/header.php';
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
+        if (typeof lucide !== 'undefined') { lucide.createIcons(); }
 
         const filterBtns = document.querySelectorAll('.filter-btn');
         const sections = document.querySelectorAll('.category-section');
 
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
+                
+                // Reset semua class ke inactive
                 filterBtns.forEach(b => {
-                    b.classList.remove('bg-[#254794]', 'text-white', 'border-[#254794]', 'shadow-md', 'shadow-blue-900/20');
-                    b.classList.add('bg-white', 'text-gray-600', 'border-gray-200');
+                    b.classList.remove('active-theme-btn');
+                    b.classList.add('inactive-theme-btn');
                 });
                 
-                btn.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
-                btn.classList.add('bg-[#254794]', 'text-white', 'border-[#254794]', 'shadow-md', 'shadow-blue-900/20');
+                // Beri class active ke tombol yg diklik
+                btn.classList.remove('inactive-theme-btn');
+                btn.classList.add('active-theme-btn');
 
                 const filterValue = btn.getAttribute('data-filter');
 

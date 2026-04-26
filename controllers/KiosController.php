@@ -10,9 +10,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
-// ==========================================
-// FUNGSI UPLOAD SUPER AMAN (MAX 1MB, ONLY IMG)
-// ==========================================
 function handleUpload() {
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
         $target_dir = "../assets/img/Kios/"; 
@@ -25,7 +22,6 @@ function handleUpload() {
         $file_tmp = $_FILES["image"]["tmp_name"];
         $file_size = $_FILES["image"]["size"];
         
-        // 1. Validasi Ekstensi File
         $allowed_extensions = ['jpg', 'jpeg', 'png', 'webp'];
         $file_extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
         
@@ -34,13 +30,11 @@ function handleUpload() {
             exit;
         }
 
-        // 2. Validasi Ukuran (Max 1MB = 1.048.576 Bytes)
         if ($file_size > 1048576) {
             echo "<script>alert('GAGAL: Ukuran gambar terlalu besar! Maksimal upload adalah 1 MB.'); window.location.href='../views/admin/kios.php';</script>";
             exit;
         }
 
-        // 3. Validasi Tipe Asli (MIME Type) -> Mencegah file PDF/Virus yang di-rename jadi .jpg
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime_type = finfo_file($finfo, $file_tmp);
         finfo_close($finfo);
@@ -51,7 +45,6 @@ function handleUpload() {
             exit;
         }
 
-        // 4. Lolos Validasi -> Generate Nama Baru & Simpan
         $new_file_name = time() . "_" . uniqid() . "." . $file_extension;
         $target_file = $target_dir . $new_file_name;
 
@@ -62,7 +55,6 @@ function handleUpload() {
     return false;
 }
 
-// PROSES TAMBAH KIOS
 if (isset($_POST['add']) || isset($_POST['tambah'])) {
     $name = mysqli_real_escape_string($conn, $_POST['name']);
     $business_type = mysqli_real_escape_string($conn, $_POST['business_type']);
@@ -81,7 +73,6 @@ if (isset($_POST['add']) || isset($_POST['tambah'])) {
     exit;
 }
 
-// PROSES UPDATE/EDIT KIOS
 if (isset($_POST['update'])) {
     $id = (int)$_POST['id'];
     $name = mysqli_real_escape_string($conn, $_POST['name']);
@@ -102,7 +93,6 @@ if (isset($_POST['update'])) {
     exit;
 }
 
-// PROSES HAPUS KIOS
 if (isset($_GET['hapus'])) {
     $id = (int)$_GET['hapus'];
     mysqli_query($conn, "DELETE FROM kios WHERE id=$id");

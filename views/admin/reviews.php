@@ -9,18 +9,24 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 require_once '../../config/koneksi.php';
 /** @var mysqli $conn */ 
 
-// ==========================================
-// HANDLE ACTION PIN / UNPIN DENGAN VALIDASI
-// ==========================================
+// === PANGGIL PENGATURAN CMS BIAR ADMIN DINAMIS ===
+require_once '../../models/SettingsModel.php'; 
+$settingsModel = new SettingsModel($conn);
+$web_setting = $settingsModel->getSettings(); 
+
+// PENTING: Panggil admin_theme_color & admin_sidebar_color
+$theme_color = !empty($web_setting['admin_theme_color']) ? htmlspecialchars($web_setting['admin_theme_color']) : '#2563eb';
+$sidebar_color = !empty($web_setting['admin_sidebar_color']) ? htmlspecialchars($web_setting['admin_sidebar_color']) : '#1e293b';
+$font_family = !empty($web_setting['font_family']) ? htmlspecialchars($web_setting['font_family']) : 'Plus Jakarta Sans';
+// ======================================================
+
 if (isset($_GET['action']) && isset($_GET['id'])) {
     $id = (int)$_GET['id'];
     
     if ($_GET['action'] == 'pin') {
-        // Cek dulu udah berapa ulasan yang di-pin
         $cek_pin = mysqli_query($conn, "SELECT COUNT(id) as total FROM reviews WHERE is_pinned = 1");
         $data_pin = mysqli_fetch_assoc($cek_pin);
         
-        // Kalau udah 3, tolak!
         if ($data_pin['total'] >= 3) {
             header("Location: reviews.php?error=max_pin");
             exit;
@@ -48,7 +54,6 @@ $totalRating = 0;
 $positiveReviews = 0;
 $reviewsData = [];
 
-// Variabel untuk Sentiment & Keyword
 $all_text = "";
 $pos_count = 0; $neg_count = 0;
 $pos_words = ['bagus','bersih','keren','nyaman','murah','enak','indah','ramah','mantap','rapi','luas','aman','estetik','sejuk','terbaik','puas'];
@@ -64,7 +69,6 @@ if($reviewsList && mysqli_num_rows($reviewsList) > 0) {
             $positiveReviews++;
         }
 
-        // --- PROSES NLP SEDERHANA UNTUK SENTIMEN & KEYWORD ---
         $text = strtolower($row['comment'] ?? '');
         $all_text .= " " . $text;
 
@@ -75,7 +79,6 @@ if($reviewsList && mysqli_num_rows($reviewsList) > 0) {
 
 $avgRating = $totalReviews > 0 ? number_format($totalRating / $totalReviews, 1) : "0.0";
 
-// Penentuan Hasil Sentimen (Dengan Background Dinamis untuk UI)
 $sentiment_result = "Netral 😐"; $sentiment_color = "text-slate-600"; $sentiment_icon = "minus"; 
 $sentiment_bg = "bg-slate-50"; $sentiment_border = "border-slate-200";
 
@@ -96,7 +99,6 @@ elseif ($neg_count > $pos_count) {
     $sentiment_bg = "bg-orange-50/50"; $sentiment_border = "border-orange-200";
 }
 
-// Ekstraksi Top Keywords
 $words = str_word_count(preg_replace('/[^a-z]/', ' ', strtolower($all_text)), 1);
 $stopwords = ['yang','dan','di','ke','dari','ini','itu','untuk','dengan','ada','tidak','bisa','juga','sudah','saya','kami','tempat','citra','niaga','sangat','banget','lagi','buat','kalau','sama','nya','aku','karena'];
 $filtered_words = array_diff($words, $stopwords);
@@ -116,58 +118,93 @@ $top_keywords = array_slice($word_counts, 0, 6, true);
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .font-cinzel { font-family: 'Cinzel', serif; }
+        /* SIHIR CSS DINAMIS UNTUK ADMIN */
+        :root {
+            --theme-color: <?= $theme_color ?>;
+            --sidebar-color: <?= $sidebar_color ?>;
+            --font-custom: '<?= $font_family ?>', sans-serif;
+            --theme-shadow: color-mix(in srgb, var(--theme-color) 30%, transparent);
+            --theme-light: color-mix(in srgb, var(--theme-color) 10%, white);
+            --theme-border-light: color-mix(in srgb, var(--theme-color) 20%, white);
+        }
+        
+        body { font-family: var(--font-custom) !important; }
+        .font-cinzel { font-family: 'Cinzel', serif !important; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         #notification-alert { transition: opacity 0.5s ease, transform 0.5s ease; }
+
+        /* CLASS DINAMIS */
+        .bg-theme { background-color: var(--theme-color) !important; }
+        .text-theme { color: var(--theme-color) !important; }
+        .bg-sidebar { background-color: var(--sidebar-color) !important; }
+        .shadow-theme { box-shadow: 0 10px 15px -3px var(--theme-shadow) !important; }
+        .border-theme { border-color: var(--theme-color) !important; }
+        
+        .bg-theme-light { background-color: var(--theme-light) !important; }
+        .border-theme-light { border-color: var(--theme-border-light) !important; }
+        .hover-bg-theme-light:hover { background-color: color-mix(in srgb, var(--theme-color) 15%, white) !important; }
+
+        /* ======================================================== */
+        /* --- FIX RESPONSIVE KHUSUS LAYAR HP (MOBILE DEVICES) ---  */
+        /* ======================================================== */
+        @media (max-width: 768px) {
+            .filter-btn { padding: 8px 14px !important; font-size: 0.75rem !important; }
+        }
     </style>
 </head>
-<body class="bg-[#f8fafc] text-slate-800 h-screen overflow-hidden flex">
+<body class="bg-[#f8fafc] text-slate-800 h-screen overflow-hidden flex relative">
+
+    <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden transition-opacity"></div>
 
     <?php $admin_page = basename($_SERVER['PHP_SELF']); ?>
-    <aside class="w-64 bg-[#1e293b] text-slate-300 flex flex-col h-full shrink-0 shadow-xl z-20">
-        <div class="p-6 flex items-center gap-3">
-            <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-white">
-                <i data-lucide="map-pin" class="w-5 h-5"></i>
+    <aside id="main-sidebar" class="w-64 bg-sidebar text-slate-300 flex flex-col h-full shrink-0 shadow-2xl z-40 fixed lg:static transition-transform duration-300 ease-in-out -translate-x-full lg:translate-x-0">
+        <div class="p-6 flex items-center justify-between border-b border-white/5">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-white">
+                    <i data-lucide="map-pin" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-white tracking-wide uppercase text-sm">CITRA NIAGA</h1>
+                    <p class="text-[10px] text-slate-400">Admin Portal</p>
+                </div>
             </div>
-            <div>
-                <h1 class="font-bold text-white tracking-wide uppercase">CITRA NIAGA</h1>
-                <p class="text-[10px] text-slate-400">Admin Portal</p>
-            </div>
+            <button onclick="toggleSidebar()" class="lg:hidden text-slate-400 hover:text-white p-1">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
         </div>
 
-        <nav class="flex-1 px-4 py-4 space-y-2">
-            <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'dashboard.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+        <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto hide-scrollbar">
+            <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'dashboard.php') ? 'bg-theme text-white shadow-theme' : 'hover:bg-white/5' ?>">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                 <span class="text-sm font-medium">Dashboard</span>
             </a>
-            <a href="gallery.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'gallery.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+            <a href="gallery.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'gallery.php') ? 'bg-theme text-white shadow-theme' : 'hover:bg-white/5' ?>">
                 <i data-lucide="image" class="w-5 h-5"></i>
                 <span class="text-sm font-medium">Kelola Galeri</span>
             </a>
-            <a href="history.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'history.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+            <a href="history.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'history.php') ? 'bg-theme text-white shadow-theme' : 'hover:bg-white/5' ?>">
                 <i data-lucide="book-open" class="w-5 h-5"></i>
                 <span class="text-sm font-medium">Kelola Sejarah</span>
             </a>
-            <a href="kios.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'kios.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+            <a href="kios.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'kios.php') ? 'bg-theme text-white shadow-theme' : 'hover:bg-white/5' ?>">
                 <i data-lucide="store" class="w-5 h-5"></i>
                 <span class="text-sm font-medium">Kelola Kios</span>
             </a>
-            <a href="events.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'events.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+            <a href="events.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'events.php') ? 'bg-theme text-white shadow-theme' : 'hover:bg-white/5' ?>">
                 <i data-lucide="calendar" class="w-5 h-5"></i>
                 <span class="text-sm font-medium">Kelola Acara</span>
             </a>
-            <a href="reviews.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'reviews.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+            <a href="reviews.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'reviews.php') ? 'bg-theme text-white shadow-theme' : 'hover:bg-white/5' ?>">
                 <i data-lucide="message-square" class="w-5 h-5"></i>
                 <span class="text-sm font-medium">Kelola Ulasan</span>
             </a>
-            <a href="settings.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'settings.php') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'hover:bg-white/5' ?>">
+            <a href="settings.php" class="flex items-center gap-3 px-4 py-3 rounded-xl transition <?= ($admin_page == 'settings.php') ? 'bg-theme text-white shadow-theme' : 'hover:bg-white/5' ?>">
                 <i data-lucide="settings" class="w-5 h-5"></i>
                 <span class="text-sm font-medium">Pengaturan Web</span>
             </a>
         </nav>
 
-        <div class="p-4 mt-auto border-t border-slate-700/50">
+        <div class="p-4 mt-auto border-t border-white/5">
             <a href="../../controllers/AuthController.php?logout=true" class="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-400/10 rounded-xl transition font-medium">
                 <i data-lucide="log-out" class="w-5 h-5"></i>
                 <span class="text-sm">Logout</span>
@@ -175,26 +212,31 @@ $top_keywords = array_slice($word_counts, 0, 6, true);
         </div>
     </aside>
 
-    <div class="flex-1 flex flex-col h-screen overflow-hidden bg-white">
+    <div class="flex-1 flex flex-col h-screen min-w-0 overflow-hidden bg-white">
         
-        <header class="bg-white px-8 py-4 flex justify-between items-center border-b border-slate-100 z-10 shrink-0">
-            <div>
-                <h1 class="font-bold text-xl text-slate-800 tracking-wider uppercase">Kelola Ulasan</h1>
-                <p class="text-xs text-slate-400">Moderasi dan Analisis ulasan pengunjung Citra Niaga</p>
+        <header class="bg-white px-4 lg:px-8 py-4 flex justify-between items-center border-b border-slate-100 z-10 shrink-0">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="lg:hidden p-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+                <div>
+                    <h2 class="font-bold text-lg lg:text-xl text-slate-800 tracking-wider uppercase">Kelola Ulasan</h2>
+                    <p class="text-[10px] text-slate-400 hidden sm:block">Moderasi dan Analisis ulasan pengunjung Citra Niaga</p>
+                </div>
             </div>
             
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
+                <div class="w-9 h-9 rounded-full bg-theme text-white flex items-center justify-center font-bold text-sm shadow-sm transition-colors">
                     <?= strtoupper(substr($_SESSION['username'] ?? 'A', 0, 1)) ?>
                 </div>
                 <div class="hidden md:block">
-                    <p class="text-xs font-bold text-blue-600"><?= htmlspecialchars($_SESSION['username'] ?? 'Admin') ?></p>
+                    <p class="text-xs font-bold text-theme"><?= htmlspecialchars($_SESSION['username'] ?? 'Admin') ?></p>
                     <p class="text-[10px] text-slate-400 uppercase">Administrator</p>
                 </div>
             </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-8 hide-scrollbar bg-[#f8fafc]">
+        <main class="flex-1 overflow-y-auto p-4 lg:p-8 hide-scrollbar bg-[#f8fafc] w-full">
             
             <?php if(isset($_GET['deleted'])): ?>
             <div id="notification-alert" class="bg-red-50 text-red-600 p-4 rounded-xl mb-6 flex items-center gap-3 border border-red-100 shadow-sm transform translate-y-0 opacity-100">
@@ -204,7 +246,7 @@ $top_keywords = array_slice($word_counts, 0, 6, true);
             <?php endif; ?>
 
             <?php if(isset($_GET['pinned'])): ?>
-            <div id="notification-alert" class="bg-blue-50 text-blue-600 p-4 rounded-xl mb-6 flex items-center gap-3 border border-blue-100 shadow-sm transform translate-y-0 opacity-100">
+            <div id="notification-alert" class="bg-theme-light text-theme p-4 rounded-xl mb-6 flex items-center gap-3 border border-theme-light shadow-sm transform translate-y-0 opacity-100">
                 <i data-lucide="check-circle" class="w-5 h-5"></i>
                 <span class="text-sm font-medium">Ulasan berhasil di-pin ke halaman Home!</span>
             </div>
@@ -224,16 +266,16 @@ $top_keywords = array_slice($word_counts, 0, 6, true);
             </div>
             <?php endif; ?>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
                 
-                <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-6 shadow-md text-white relative overflow-hidden flex flex-col justify-between">
+                <div class="bg-theme rounded-2xl p-6 shadow-theme text-white relative overflow-hidden flex flex-col justify-between transition-colors">
                     <i data-lucide="message-square" class="absolute -right-4 -bottom-4 w-28 h-28 text-white opacity-10 transform -rotate-12"></i>
                     <div class="relative z-10">
-                        <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-1">Total Ulasan Masuk</p>
-                        <h3 class="text-5xl font-black mb-1"><?= $totalReviews ?></h3>
+                        <p class="text-white/80 text-[10px] font-bold uppercase tracking-widest mb-1">Total Ulasan Masuk</p>
+                        <h3 class="text-4xl lg:text-5xl font-black mb-1"><?= $totalReviews ?></h3>
                     </div>
                     <div class="relative z-10 mt-4">
-                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/20 backdrop-blur-sm text-xs font-medium">
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/20 backdrop-blur-sm text-xs font-medium border border-white/20">
                             <i data-lucide="activity" class="w-3 h-3"></i> Data Real-time
                         </div>
                     </div>
@@ -270,11 +312,11 @@ $top_keywords = array_slice($word_counts, 0, 6, true);
 
                 <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col">
                     <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-4 flex items-center gap-1.5">
-                        <i data-lucide="hash" class="w-3.5 h-3.5 text-blue-500"></i> Top Keywords
+                        <i data-lucide="hash" class="w-3.5 h-3.5 text-theme"></i> Top Keywords
                     </p>
                     <div class="flex flex-wrap gap-2 mt-auto">
                         <?php if(!empty($top_keywords)): foreach($top_keywords as $word => $count): ?>
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50 text-slate-600 text-[11px] font-bold border border-slate-200 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-all cursor-default shadow-sm">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50 text-slate-600 text-[11px] font-bold border border-slate-200 hover-bg-theme-light hover:text-theme hover-border-theme transition-all cursor-default shadow-sm">
                                 <?= strtoupper($word) ?> 
                                 <span class="bg-white px-1.5 py-0.5 rounded-full text-[9px] text-slate-400"><?= $count ?></span>
                             </span>
@@ -288,8 +330,9 @@ $top_keywords = array_slice($word_counts, 0, 6, true);
                 <i data-lucide="filter" class="w-5 h-5 text-slate-400"></i>
                 <h3 class="font-bold text-slate-700">Filter Bintang Ulasan</h3>
             </div>
+            
             <div class="flex flex-wrap gap-2 mb-6" id="filter-container">
-                <button onclick="filterReviews('all', this)" class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold bg-blue-600 text-white shadow-sm border border-blue-600 transition-all">SEMUA</button>
+                <button onclick="filterReviews('all', this)" class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold bg-theme text-white shadow-sm border border-theme transition-all">SEMUA</button>
                 <button onclick="filterReviews('5', this)" class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all">5 ★</button>
                 <button onclick="filterReviews('4', this)" class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all">4 ★</button>
                 <button onclick="filterReviews('3', this)" class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all">3 ★</button>
@@ -298,15 +341,15 @@ $top_keywords = array_slice($word_counts, 0, 6, true);
             </div>
 
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-10">
-                <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div class="p-4 lg:p-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between sm:items-center gap-2 bg-slate-50/50">
                     <h3 class="font-bold text-sm text-slate-800 uppercase tracking-wider">Daftar Ulasan Pengunjung</h3>
-                    <span class="text-[10px] text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100 font-bold">Maksimal 3 ulasan yang dapat di-pin ke Home</span>
+                    <span class="text-[10px] text-theme bg-theme-light px-3 py-1 rounded-full border border-theme-light font-bold w-fit">Maksimal 3 ulasan yang dapat di-pin ke Home</span>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
+                <div class="overflow-x-auto w-full">
+                    <table class="w-full text-left border-collapse min-w-[700px]">
                         <thead>
                             <tr class="border-b border-slate-200 bg-slate-50">
-                                <th class="py-4 px-6 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pengunjung</th>
+                                <th class="py-4 px-6 text-[10px] font-bold text-slate-400 uppercase tracking-wider w-1/4">Pengunjung</th>
                                 <th class="py-4 px-6 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Rating</th>
                                 <th class="py-4 px-6 text-[10px] font-bold text-slate-400 uppercase tracking-wider w-1/3">Ulasan</th>
                                 <th class="py-4 px-6 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">Tampil Home</th>
@@ -331,7 +374,7 @@ $top_keywords = array_slice($word_counts, 0, 6, true);
                                         </div>
                                     </td>
                                     
-                                    <td class="py-4 px-6">
+                                    <td class="py-4 px-6 align-top pt-5">
                                         <div class="flex text-amber-400 text-xs">
                                             <?php 
                                             $rating = (int)$row['rating'];
@@ -341,14 +384,14 @@ $top_keywords = array_slice($word_counts, 0, 6, true);
                                     </td>
                                     
                                     <td class="py-4 px-6">
-                                        <p class="text-xs text-slate-500 line-clamp-2 max-w-xs leading-relaxed" title="<?= htmlspecialchars($row['comment']); ?>">
+                                        <p class="text-xs text-slate-500 line-clamp-3 max-w-xs leading-relaxed" title="<?= htmlspecialchars($row['comment']); ?>">
                                             "<?= htmlspecialchars($row['comment']); ?>"
                                         </p>
                                     </td>
                                     
-                                    <td class="py-4 px-6 text-center">
+                                    <td class="py-4 px-6 text-center align-middle">
                                         <?php if(isset($row['is_pinned']) && $row['is_pinned'] == 1): ?>
-                                            <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-bold border border-blue-200 inline-flex items-center gap-1 shadow-sm">
+                                            <span class="bg-theme-light text-theme px-3 py-1 rounded-full text-[10px] font-bold border border-theme-light inline-flex items-center justify-center gap-1 shadow-sm w-fit mx-auto">
                                                 <i data-lucide="pin" class="w-3 h-3 fill-current"></i> Dipin
                                             </span>
                                         <?php else: ?>
@@ -356,13 +399,13 @@ $top_keywords = array_slice($word_counts, 0, 6, true);
                                         <?php endif; ?>
                                     </td>
                                     
-                                    <td class="py-4 px-6 text-center space-x-1">
+                                    <td class="py-4 px-6 text-center space-x-1 align-middle">
                                         <?php if(isset($row['is_pinned']) && $row['is_pinned'] == 1): ?>
                                             <a href="?action=unpin&id=<?= $row['id'] ?>" class="inline-flex items-center justify-center w-8 h-8 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition border border-slate-200" title="Lepas dari Home">
                                                 <i data-lucide="pin-off" class="w-4 h-4"></i>
                                             </a>
                                         <?php else: ?>
-                                            <a href="?action=pin&id=<?= $row['id'] ?>" class="inline-flex items-center justify-center w-8 h-8 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition border border-blue-200" title="Tampilkan di Home">
+                                            <a href="?action=pin&id=<?= $row['id'] ?>" class="inline-flex items-center justify-center w-8 h-8 bg-theme-light hover-bg-theme-light text-theme rounded-lg transition border border-theme-light" title="Tampilkan di Home">
                                                 <i data-lucide="pin" class="w-4 h-4"></i>
                                             </a>
                                         <?php endif; ?>
@@ -395,18 +438,23 @@ $top_keywords = array_slice($word_counts, 0, 6, true);
     <script>
         lucide.createIcons();
 
-        // FUNGSI FILTER ULASAN REAL-TIME
+        // JS BUKA TUTUP SIDEBAR HP
+        function toggleSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
         function filterReviews(rating, btnElement) {
-            // 1. Ubah warna tombol
             const allBtns = document.querySelectorAll('.filter-btn');
             allBtns.forEach(btn => {
-                btn.classList.remove('bg-blue-600', 'text-white', 'shadow-sm', 'border-blue-600');
+                btn.classList.remove('bg-theme', 'text-white', 'shadow-sm', 'border-theme');
                 btn.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
             });
             btnElement.classList.remove('bg-white', 'text-slate-600', 'border-slate-200');
-            btnElement.classList.add('bg-blue-600', 'text-white', 'shadow-sm', 'border-blue-600');
+            btnElement.classList.add('bg-theme', 'text-white', 'shadow-sm', 'border-theme');
 
-            // 2. Saring baris tabel berdasarkan atribut data-rating
             const rows = document.querySelectorAll('.review-row');
             let visibleCount = 0;
             
@@ -419,7 +467,6 @@ $top_keywords = array_slice($word_counts, 0, 6, true);
                 }
             });
 
-            // 3. Tampilkan pesan kalau tabelnya kosong hasil filter
             let emptyRow = document.getElementById('empty-filter-msg');
             if (visibleCount === 0 && rows.length > 0) {
                 if (!emptyRow) {
@@ -437,7 +484,6 @@ $top_keywords = array_slice($word_counts, 0, 6, true);
             }
         }
 
-        // Alert auto-hide
         const alertBox = document.getElementById('notification-alert');
         if (alertBox) {
             setTimeout(() => {

@@ -9,9 +9,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
-// ==========================================
-// TAMBAH EVENT BARU
-// ==========================================
 if (isset($_POST['tambah_event'])) {
     $title = mysqli_real_escape_string($conn, $_POST['title']);
     $start_date = mysqli_real_escape_string($conn, $_POST['start_date']);
@@ -41,9 +38,6 @@ if (isset($_POST['tambah_event'])) {
     exit;
 }
 
-// ==========================================
-// EDIT EVENT (FITUR BARU)
-// ==========================================
 if (isset($_POST['edit_event'])) {
     $id = (int)$_POST['id'];
     $title = mysqli_real_escape_string($conn, $_POST['title']);
@@ -63,7 +57,6 @@ if (isset($_POST['edit_event'])) {
 
         $new_image = "event_" . time() . "." . $file_extension;
         if(move_uploaded_file($file_tmp, $target_dir . $new_image)) {
-            // Hapus gambar lama biar hosting lu ga penuh
             $cek = mysqli_query($conn, "SELECT image FROM events WHERE id = $id");
             if ($r = mysqli_fetch_assoc($cek)) {
                 $old_file = $target_dir . $r['image'];
@@ -72,7 +65,6 @@ if (isset($_POST['edit_event'])) {
             mysqli_query($conn, "UPDATE events SET title='$title', description='$description', start_date='$start_date', end_date='$end_date', image='$new_image' WHERE id=$id");
         }
     } else {
-        // Kalau ga upload gambar baru, update teksnya aja
         mysqli_query($conn, "UPDATE events SET title='$title', description='$description', start_date='$start_date', end_date='$end_date' WHERE id=$id");
     }
     
@@ -80,9 +72,6 @@ if (isset($_POST['edit_event'])) {
     exit;
 }
 
-// ==========================================
-// HAPUS EVENT
-// ==========================================
 if (isset($_GET['hapus'])) {
     $id = (int)$_GET['hapus'];
     $cek = mysqli_query($conn, "SELECT image FROM events WHERE id = $id");

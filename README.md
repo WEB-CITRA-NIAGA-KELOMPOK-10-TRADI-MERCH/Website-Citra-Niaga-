@@ -41,7 +41,7 @@ Suasana di kawasan ini cukup hidup dengan beragam aktivitas yang berlangsung set
 | Informasi wisata belum terintegrasi dalam satu platform sehingga sulit diakses secara lengkap |
 | Pengelolaan data masih dilakukan secara manual sehingga kurang efisien dalam proses pembaruan informasi |
 | Belum tersedianya website resmi menyebabkan promosi kawasan masih terbatas |
-| Tidak adanya sistem interaktif bagi pengunjung seperti fitur ulasan atau feedback |
+| Kurangnya fitur interaktif bagi pengunjung seperti fitur ulasan atau feedback |
 
 
 

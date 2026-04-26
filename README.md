@@ -26,7 +26,9 @@
 ## 🏙️ 𝐏𝐫𝐨𝐟𝐢𝐥 𝐎𝐛𝐣𝐞𝐤 𝐖𝐢𝐬𝐚𝐭𝐚
 
 <p align="justify">
-Citra Niaga Samarinda merupakan salah satu kawasan ikonik di Kota Samarinda yang dikenal sebagai pusat aktivitas ekonomi, kuliner, dan budaya. Kawasan ini menjadi tempat berkumpulnya masyarakat serta memiliki berbagai fasilitas seperti area kuliner, kios UMKM, dan ruang publik yang sering dimanfaatkan untuk kegiatan sosial.
+Citra Niaga Samarinda merupakan salah satu kawasan ikonik di Kota Samarinda yang dikenal sebagai pusat aktivitas ekonomi, kuliner, dan budaya. Kawasan ini juga merupakan kawasan wisata sekaligus pusat perdagangan yang terletak di Jalan Pelabuhan Niaga. Citra Niaga menjadi tempat berkumpulnya masyarakat serta memiliki berbagai fasilitas seperti area kuliner, kios UMKM, dan ruang publik yang sering dimanfaatkan untuk kegiatan sosial. Selain itu, kawasan ini menjadi pusat UMKM yang menawarkan berbagai produk khas Kalimantan, seperti souvenir, pakaian adat Dayak, dan aksesoris, sehingga menjadikannya sebagai salah satu destinasi wisata bagi masyarakat maupun wisatawan.
+
+Suasana di kawasan ini cukup hidup dengan beragam aktivitas yang berlangsung setiap harinya, mulai dari kegiatan jual beli hingga interaksi antar pengunjung. Kawasan ini juga sering dimanfaatkan untuk berbagai kegiatan dan event, yang semakin menambah daya tariknya sebagai ruang publik yang aktif. Dengan adanya berbagai fungsi tersebut, Citra Niaga tidak hanya berperan sebagai pusat perdagangan, tetapi juga sebagai tempat rekreasi dan interaksi sosial bagi masyarakat.
 </p>
 
 ---
@@ -87,9 +89,18 @@ Pengunjung dapat mengakses berbagai informasi terkait kawasan Citra Niaga secara
 - **Melihat Lokasi melalui Maps**  
   Memudahkan pengunjung mengetahui lokasi Citra Niaga Samarinda.
 
-- **Melihat dan Mengirim Ulasan**  
-  Pengunjung dapat melihat ulasan dari pengunjung lain serta memberikan ulasan terhadap kawasan Citra Niaga.
+- **Melihat Informasi Acara (Event)**  
+  Pengunjung dapat melihat daftar acara yang sedang berlangsung, akan datang, maupun yang telah selesai di kawasan Citra Niaga.
 
+- **Melihat Ulasan Pengunjung**  
+  Pengunjung dapat melihat ulasan dan rating dari pengunjung lain.
+
+- **Mengirim Ulasan (Login Required)**  
+  Untuk memberikan ulasan atau rating, pengunjung diwajibkan untuk login terlebih dahulu agar data pengguna dapat terverifikasi.
+
+- **Logout**  
+  Pengunjung dapat melakukan logout untuk mengakhiri sesi penggunaan sistem setelah login.
+  
 ---
 
 ### 🙎🏻‍♀️ 𝗔𝗱𝗺𝗶𝗻

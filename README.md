@@ -10,7 +10,7 @@
  𝖳𝖾𝗆𝗎𝗄𝖺𝗇 𝗋𝖺𝗀𝖺𝗆 𝗄𝗎𝗅𝗂𝗇𝖾𝗋, 𝗄𝖾𝗋𝖺𝗃𝗂𝗇𝖺𝗇, 𝖽𝖺𝗇 𝗉𝖾𝗇𝗀𝖺𝗅𝖺𝗆𝖺𝗇 𝗆𝖾𝗇𝖺𝗋𝗂𝗄 𝖽𝗂 𝗄𝖺𝗐𝖺𝗌𝖺𝗇 𝗂𝗄𝗈𝗇𝗂𝗄 𝖢𝗂𝗍𝗋𝖺 𝖭𝗂𝖺𝗀𝖺 𝖲𝖺𝗆𝖺𝗋𝗂𝗇𝖽𝖺 
 </p>
 
-## 🔗 Demo Website
+## 🔗 𝗗𝗲𝗺𝗼 𝗪𝗲𝗯𝘀𝗶𝘁𝗲
 
 Website dapat diakses melalui link berikut:
 🌐 [Klik untuk membuka website](http://citra-niaga.infinityfreeapp.com)

@@ -14,6 +14,9 @@ $settingsModel = new SettingsModel($conn);
 $web_setting = $settingsModel->getSettings(); 
 $theme_color = !empty($web_setting['theme_color']) ? htmlspecialchars($web_setting['theme_color']) : '#254794';
 
+$text_color = !empty($web_setting['text_color']) ? htmlspecialchars($web_setting['text_color']) : '#333333';
+$header_text_color = !empty($web_setting['header_text_color']) ? htmlspecialchars($web_setting['header_text_color']) : '#333333';
+
 $reviewsModel = new ReviewsModel($conn);
 $reviewsList = $reviewsModel->getAllReviews(); 
 
@@ -40,7 +43,23 @@ require_once 'templates/header.php';
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
+    :root {
+        --text-color: <?= $text_color ?>;
+        --header-text-color: <?= $header_text_color ?>;
+    }
+
     [v-cloak] { display: none !important; }
+    
+    h1, h2, h3, h4, h5, h6, .text-dark {
+        color: var(--header-text-color) !important;
+    }
+    
+    p, label, .text-muted, .text-secondary {
+        color: var(--text-color) !important;
+    }
+
+    .text-white { color: #ffffff !important; }
+    .text-warning { color: #ffc107 !important; } 
     
     .star-icon { fill: currentColor; }
     .cursor-pointer { cursor: pointer; }
@@ -51,19 +70,19 @@ require_once 'templates/header.php';
     .list-enter-from, .list-leave-to { opacity: 0; transform: translateY(15px); }
     .list-move { transition: transform 0.4s ease; }
     
-    .filter-btn { transition: all 0.3s ease; border: 1px solid #dee2e6; background-color: white; color: #6c757d; font-weight: 600; font-size: 0.8rem;}
+    .filter-btn { transition: all 0.3s ease; border: 1px solid #dee2e6; background-color: white; color: var(--text-color); font-weight: 600; font-size: 0.8rem;}
     .filter-btn:hover { background-color: #f8f9fa; border-color: #ced4da; }
     
     .filter-btn.active-all { 
         background-color: <?= $theme_color ?>; 
-        color: white; 
+        color: white !important; 
         border-color: <?= $theme_color ?>; 
         box-shadow: 0 4px 10px rgba(37,71,148,0.3); 
     }
     
     .filter-btn.active-star { 
         background-color: #d97706; 
-        color: white; 
+        color: white !important; 
         border-color: #d97706; 
         box-shadow: 0 4px 10px rgba(217,119,6,0.3); 
     }
@@ -71,13 +90,13 @@ require_once 'templates/header.php';
     .page-nav-btn {
         width: 50px; height: 50px; border-radius: 50%;
         background-color: <?= $theme_color ?>; 
-        color: white; border: none;
+        color: white !important; border: none;
         display: flex; align-items: center; justify-content: center;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         box-shadow: 0 4px 15px rgba(37, 71, 148, 0.4);
     }
     .page-nav-btn:disabled {
-        background: #e2e8f0; color: #94a3b8; box-shadow: none; cursor: not-allowed; transform: scale(0.95);
+        background: #e2e8f0; color: #94a3b8 !important; box-shadow: none; cursor: not-allowed; transform: scale(0.95);
     }
     .page-nav-btn:not(:disabled):hover {
         transform: translateY(-3px) scale(1.05); box-shadow: 0 8px 20px rgba(37, 71, 148, 0.5);
@@ -91,37 +110,25 @@ require_once 'templates/header.php';
     }
     .page-num-btn {
         background: transparent; border: none; 
-        color: rgba(255,255,255,0.7); 
+        color: rgba(255,255,255,0.7) !important; 
         font-weight: 700; font-size: 1rem;
         width: 38px; height: 38px; border-radius: 50%; transition: all 0.3s ease;
         display: flex; align-items: center; justify-content: center;
     }
-    .page-num-btn:hover { color: white; }
+    .page-num-btn:hover { color: white !important; }
     
     .page-num-btn.active {
         background-color: <?= $theme_color ?>; 
-        color: white;
+        color: white !important;
         box-shadow: 0 4px 10px rgba(37,71,148,0.3); transform: scale(1.1);
     }
 
-    /* ======================================================== */
-    /* --- FIX RESPONSIVE KHUSUS LAYAR HP (MOBILE DEVICES) ---  */
-    /* ======================================================== */
     @media (max-width: 768px) {
-        /* Judul utama disusutkan biar gak kepotong */
         .hero-title { font-size: 1.8rem !important; letter-spacing: 1px !important; }
         .hero-subtitle { font-size: 1rem !important; }
-        
-        /* Tombol filter bintang dibikin lebih imut di HP */
         .filter-btn { padding: 6px 14px !important; font-size: 0.75rem !important; }
-        
-        /* Kurangi padding di kartu ulasan biar teksnya lega */
         .review-card { padding: 1.25rem !important; }
-        
-        /* Beri jarak atas buat form Tulis Ulasan biar gak mepet banget sama paginasi */
         .write-review-card { margin-top: 2rem !important; padding: 1.5rem !important; }
-        
-        /* Tombol paginasi disesuaikan untuk jempol */
         .page-nav-btn { width: 40px !important; height: 40px !important; }
         .page-num-btn { width: 32px !important; height: 32px !important; font-size: 0.9rem !important; }
         .page-numbers-container { padding: 4px 12px !important; }

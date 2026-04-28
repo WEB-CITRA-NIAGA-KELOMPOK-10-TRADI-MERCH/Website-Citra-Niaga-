@@ -2,13 +2,15 @@
 require_once '../config/koneksi.php';
 /** @var mysqli $conn */
 
-// === PANGGIL PENGATURAN CMS BIAR DINAMIS ===
 require_once '../models/SettingsModel.php'; 
 $settingsModel = new SettingsModel($conn);
 $web_setting = $settingsModel->getSettings(); 
 
 $theme_color = !empty($web_setting['theme_color']) ? htmlspecialchars($web_setting['theme_color']) : '#254794';
 $font_family = !empty($web_setting['font_family']) ? htmlspecialchars($web_setting['font_family']) : 'Plus Jakarta Sans';
+
+$text_color = !empty($web_setting['text_color']) ? htmlspecialchars($web_setting['text_color']) : '#333333';
+$header_text_color = !empty($web_setting['header_text_color']) ? htmlspecialchars($web_setting['header_text_color']) : '#333333';
 
 $query_gallery = mysqli_query($conn, "SELECT * FROM gallery ORDER BY id DESC");
 $gallery_items = [];
@@ -56,18 +58,28 @@ require_once 'templates/header.php';
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
-    /* ========================================== */
-    /* SIHIR CSS DINAMIS NGIKUTIN DASHBOARD       */
-    /* ========================================== */
     :root {
         --theme-color: <?= $theme_color ?>;
         --font-custom: '<?= $font_family ?>', sans-serif;
+        
+        --text-color: <?= $text_color ?>;
+        --header-text-color: <?= $header_text_color ?>;
     }
 
     main { font-family: var(--font-custom) !important; }
 
-    .text-white-force { color: #ffffff !important; }
+    h1, h2, h3, h4, h5, h6, .text-dark, .text-\[\#111827\] {
+        color: var(--header-text-color) !important;
+    }
+    
+    p, .text-muted, .text-secondary, .text-gray-500, .text-gray-600 {
+        color: var(--text-color) !important;
+    }
+
+    .text-white-force, .text-white { color: #ffffff !important; }
+    .text-white-50 { color: rgba(255,255,255,0.5) !important; }
     .bg-brand { background-color: var(--theme-color) !important; color: #ffffff !important; }
+    .bg-brand h4, .bg-brand p { color: #ffffff !important; } 
     .text-brand { color: var(--theme-color) !important; }
     .title-border-left { border-left: 5px solid var(--theme-color) !important; padding-left: 15px; }
     
@@ -84,32 +96,16 @@ require_once 'templates/header.php';
     .custom-card { background: #fff; border-radius: 24px; border: 1px solid #f1f5f9; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); transition: transform 0.3s ease; }
     .hero-overlay { background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 100%); }
 
-    /* ======================================================== */
-    /* --- FIX RESPONSIVE KHUSUS LAYAR HP (MOBILE DEVICES) ---  */
-    /* ======================================================== */
     @media (max-width: 768px) {
-        /* Tinggi banner dikurangi biar gak menuhin layar HP */
         .hero-container { height: 320px !important; }
-        
-        /* Ukuran judul hero menyesuaikan HP */
         .hero-title { font-size: 2.2rem !important; line-height: 1.2; text-align: center; }
         .hero-content { text-align: center; padding: 1.5rem !important; }
         .hero-badge { margin: 0 auto 1rem auto !important; display: inline-flex !important; }
-
-        /* Tinggi gambar carousel disusutkan */
         .carousel-item img { height: 260px !important; }
-        
-        /* Tombol thumbnail dikecilin sedikit */
         .thumb-btn { width: 65px; height: 45px; }
-        
-        /* Padding card dikurangin */
         .custom-card { padding: 1.5rem !important; }
-        
-        /* Tombol CTA diubah jadi block/tumpuk ke bawah di HP */
         .cta-buttons { flex-direction: column !important; width: 100%; }
         .cta-buttons a { width: 100%; justify-content: center; }
-        
-        /* Ikon background di CTA disembunyikan biar teks lebih terbaca di HP */
         .cta-bg-icon { display: none; }
     }
 </style>
@@ -135,9 +131,9 @@ require_once 'templates/header.php';
             <div class="position-absolute bottom-0 start-0 w-100 p-4 p-md-5 hero-content">
                 <div class="hero-badge d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill mb-3 border border-white border-opacity-25" style="background-color: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px);">
                     <i data-lucide="award" class="w-4 h-4 text-white"></i>
-                    <span class="text-white small fw-bold tracking-widest uppercase">Destinasi Budaya Unggulan</span>
+                    <span class="text-white-force small fw-bold tracking-widest uppercase">Destinasi Budaya Unggulan</span>
                 </div>
-                <h1 class="font-cinzel text-white fw-bold display-3 mb-0 hero-title" style="text-shadow: 2px 4px 12px rgba(0,0,0,0.4);">CITRA NIAGA SAMARINDA</h1>
+                <h1 class="font-cinzel text-white-force fw-bold display-3 mb-0 hero-title" style="text-shadow: 2px 4px 12px rgba(0,0,0,0.4);">CITRA NIAGA SAMARINDA</h1>
             </div>
         </div>
 
@@ -175,8 +171,8 @@ require_once 'templates/header.php';
             <div class="col-lg-4 d-flex flex-column gap-4">
                 <div class="custom-card overflow-hidden p-0">
                     <div class="bg-brand p-4 d-flex align-items-center gap-3">
-                        <i data-lucide="map" class="w-6 h-6 text-white"></i>
-                        <h6 class="mb-0 fw-bold tracking-wider font-cinzel text-white text-uppercase">Informasi Umum</h6>
+                        <i data-lucide="map" class="w-6 h-6 text-white-force"></i>
+                        <h6 class="mb-0 fw-bold tracking-wider font-cinzel text-white-force text-uppercase">Informasi Umum</h6>
                     </div>
                     <div class="p-4">
                         <div class="mb-4 d-flex gap-3 align-items-start">

@@ -9,7 +9,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 require_once '../../config/koneksi.php';
 /** @var mysqli $conn */ 
 
-// === PANGGIL PENGATURAN CMS BIAR ADMIN DINAMIS ===
 require_once '../../models/SettingsModel.php'; 
 $settingsModel = new SettingsModel($conn);
 $web_setting = $settingsModel->getSettings(); 
@@ -17,7 +16,6 @@ $web_setting = $settingsModel->getSettings();
 $theme_color = !empty($web_setting['admin_theme_color']) ? htmlspecialchars($web_setting['admin_theme_color']) : '#2563eb';
 $sidebar_color = !empty($web_setting['admin_sidebar_color']) ? htmlspecialchars($web_setting['admin_sidebar_color']) : '#1e293b';
 $font_family = !empty($web_setting['font_family']) ? htmlspecialchars($web_setting['font_family']) : 'Plus Jakarta Sans';
-// ======================================================
 
 require_once '../../models/GalleryModel.php'; 
 
@@ -34,7 +32,6 @@ $galleries = $galleryModel->getAllGallery();
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* SIHIR CSS DINAMIS UNTUK ADMIN */
         :root {
             --theme-color: <?= $theme_color ?>;
             --sidebar-color: <?= $sidebar_color ?>;
@@ -46,7 +43,6 @@ $galleries = $galleryModel->getAllGallery();
         
         body { font-family: var(--font-custom) !important; }
         
-        /* CLASS DINAMIS */
         .bg-theme { background-color: var(--theme-color) !important; }
         .text-theme { color: var(--theme-color) !important; }
         .bg-sidebar { background-color: var(--sidebar-color) !important; }
@@ -60,10 +56,6 @@ $galleries = $galleryModel->getAllGallery();
         .hover-border-theme:hover { border-color: var(--theme-color) !important; }
         .group:hover .group-hover\:text-theme { color: var(--theme-color) !important; }
         .hover-bg-theme:hover { filter: brightness(0.9); }
-
-        /* ======================================================== */
-        /* --- FIX RESPONSIVE KHUSUS LAYAR HP (MOBILE DEVICES) ---  */
-        /* ======================================================== */
         @media (max-width: 768px) {
             .filter-btn { padding: 8px 14px !important; font-size: 0.75rem !important; }
             .form-container { padding: 1.25rem !important; }
@@ -366,7 +358,6 @@ $galleries = $galleryModel->getAllGallery();
     <script>
         lucide.createIcons();
 
-        // JS BUKA TUTUP SIDEBAR HP
         function toggleSidebar() {
             const sidebar = document.getElementById('main-sidebar');
             const overlay = document.getElementById('sidebar-overlay');

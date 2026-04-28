@@ -28,6 +28,8 @@ $f_desc = ($is_setting_valid && !empty($global_setting['site_desc'])) ? htmlspec
 $f_theme = ($is_setting_valid && !empty($global_setting['theme_color'])) ? htmlspecialchars($global_setting['theme_color']) : '#254794';
 $f_footer_bg = ($is_setting_valid && !empty($global_setting['footer_color'])) ? htmlspecialchars($global_setting['footer_color']) : '#1e293b';
 
+$f_text_color = ($is_setting_valid && !empty($global_setting['footer_text_color'])) ? htmlspecialchars($global_setting['footer_text_color']) : '#9ca3af';
+
 $f_phone = ($is_setting_valid && !empty($global_setting['contact_phone'])) ? htmlspecialchars($global_setting['contact_phone']) : '+62 822-1949-7715';
 $f_email = ($is_setting_valid && !empty($global_setting['contact_email'])) ? htmlspecialchars($global_setting['contact_email']) : 'info@citraniaga.com';
 $f_ig = ($is_setting_valid && !empty($global_setting['contact_ig'])) ? htmlspecialchars($global_setting['contact_ig']) : '@citraniagasamarinda';
@@ -43,38 +45,50 @@ if (substr($wa_clean, 0, 1) === '0') {
 $wa_link = "https://wa.me/" . $wa_clean;
 ?>
 
-</div> <style>
+</div> 
+<style>
     .f-heading { 
-        color: #ffffff !important; 
+        color: <?= $f_text_color ?> !important; 
         font-weight: 700; 
     }
     .f-text { 
-        color: #cbd5e1 !important; 
+        color: <?= $f_text_color ?> !important; 
+        opacity: 0.85; 
     }
     .f-link { 
-        color: #cbd5e1 !important; 
+        color: <?= $f_text_color ?> !important; 
+        opacity: 0.85;
         transition: all 0.3s ease; 
         text-decoration: none; 
     }
     .f-link:hover { 
         color: <?= $f_theme ?> !important; 
         transform: translateX(4px); 
+        opacity: 1;
     }
     .f-icon { 
         color: <?= $f_theme ?> !important; 
     }
+    
     .f-bg-icon { 
-        background-color: rgba(255,255,255,0.1) !important; 
-        color: #ffffff !important; 
+        background-color: transparent !important; 
+        border: 1px solid <?= $f_text_color ?> !important;
+        color: <?= $f_text_color ?> !important; 
         transition: all 0.3s; 
+        opacity: 0.85;
     }
-    .f-bg-icon:hover { 
-        background-color: <?= $f_theme ?> !important; 
+    
+    .hover-ig:hover { 
+        background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%) !important;
+        border-color: transparent !important;
         color: #ffffff !important; 
+        opacity: 1;
     }
     .hover-wa:hover {
         background-color: #25D366 !important;
+        border-color: #25D366 !important;
         color: #ffffff !important;
+        opacity: 1;
     }
 </style>
 
@@ -127,7 +141,7 @@ $wa_link = "https://wa.me/" . $wa_clean;
                 <div class="flex flex-col gap-4">
                     
                     <div class="flex gap-4 items-center">
-                        <a href="<?= $ig_link ?>" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-pink-500 hover:to-purple-500 hover:text-white shadow-sm hover:shadow-md no-underline f-bg-icon">
+                        <a href="<?= $ig_link ?>" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full flex items-center justify-center hover-ig shadow-sm hover:shadow-md no-underline f-bg-icon">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                 <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
                                 <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
@@ -155,7 +169,7 @@ $wa_link = "https://wa.me/" . $wa_clean;
 
         </div>
 
-        <div class="pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-4" style="border-color: rgba(255,255,255,0.1);">
+        <div class="pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-4" style="border-top: 1px solid <?= $f_text_color ?>40;">
             <p class="text-sm m-0 f-text">
                 © <?= date('Y') ?> <?= $f_title ?>. All rights reserved.
             </p>

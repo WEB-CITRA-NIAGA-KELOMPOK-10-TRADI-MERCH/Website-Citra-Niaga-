@@ -23,9 +23,10 @@ class SettingsModel {
         
         $theme_color = mysqli_real_escape_string($this->db, $data['theme_color'] ?? '#254794');
         $admin_theme_color = mysqli_real_escape_string($this->db, $data['admin_theme_color'] ?? '#2563eb');
-        $admin_sidebar_color = mysqli_real_escape_string($this->db, $data['admin_sidebar_color'] ?? '#1e293b');
         
-        // INI TAMBAHANNYA BUAT TEKS ADMIN
+        $admin_sidebar_color = mysqli_real_escape_string($this->db, $data['admin_sidebar_color'] ?? '#1e293b');
+        $admin_sidebar_text_color = mysqli_real_escape_string($this->db, $data['admin_sidebar_text_color'] ?? '#cbd5e1');
+        
         $admin_text_color = mysqli_real_escape_string($this->db, $data['admin_text_color'] ?? '#1e293b');
         
         $header_color = mysqli_real_escape_string($this->db, $data['header_color'] ?? '#ffffff');
@@ -48,6 +49,7 @@ class SettingsModel {
             theme_color='$theme_color', 
             admin_theme_color='$admin_theme_color', 
             admin_sidebar_color='$admin_sidebar_color', 
+            admin_sidebar_text_color='$admin_sidebar_text_color', 
             admin_text_color='$admin_text_color', 
             header_color='$header_color', 
             footer_color='$footer_color', 

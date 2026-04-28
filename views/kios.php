@@ -9,6 +9,9 @@ $web_setting = $settingsModel->getSettings();
 $theme_color = !empty($web_setting['theme_color']) ? htmlspecialchars($web_setting['theme_color']) : '#254794';
 $font_family = !empty($web_setting['font_family']) ? htmlspecialchars($web_setting['font_family']) : 'Plus Jakarta Sans';
 
+$text_color = !empty($web_setting['text_color']) ? htmlspecialchars($web_setting['text_color']) : '#333333';
+$header_text_color = !empty($web_setting['header_text_color']) ? htmlspecialchars($web_setting['header_text_color']) : '#333333';
+
 require_once '../models/KiosModel.php'; 
 $kiosModel = new KiosModel($conn);
 $kios = $kiosModel->getAllKios();
@@ -31,11 +34,28 @@ require_once 'templates/header.php';
     :root {
         --theme-color: <?= $theme_color ?>;
         --font-custom: '<?= $font_family ?>', sans-serif;
+        --text-color: <?= $text_color ?>;
+        --header-text-color: <?= $header_text_color ?>;
     }
 
     main {
         font-family: var(--font-custom) !important;
     }
+
+    main h1, main h2, main h3, main .text-gray-900 {
+        color: var(--header-text-color) !important;
+    }
+    
+    main p:not(.text-white\/70), main span.text-gray-800, main .text-gray-600, main .text-gray-500 {
+        color: var(--text-color) !important;
+    }
+
+    main .group h3 { color: var(--header-text-color) !important; transition: color 0.3s; }
+    main .group:hover h3, main .group:hover .group-hover\:text-theme { color: var(--theme-color) !important; }
+
+    main .text-white { color: #ffffff !important; }
+    main .text-white\/70 { color: rgba(255, 255, 255, 0.7) !important; }
+    main .text-green-600 { color: #16a34a !important; } 
 
     .text-theme { color: var(--theme-color) !important; }
     .bg-theme { background-color: var(--theme-color) !important; }
@@ -50,14 +70,12 @@ require_once 'templates/header.php';
     .inactive-theme-btn {
         background-color: #ffffff !important;
         border-color: #e5e7eb !important;
-        color: #4b5563 !important;
+        color: var(--text-color) !important; 
     }
     .inactive-theme-btn:hover {
         border-color: var(--theme-color) !important;
         color: var(--theme-color) !important;
     }
-
-    .group:hover .group-hover\:text-theme { color: var(--theme-color) !important; }
 
     #custom-lightbox {
         display: none; 
@@ -77,42 +95,11 @@ require_once 'templates/header.php';
     .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
     .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
 
-    /* ======================================================== */
-    /* --- FIX RESPONSIVE KHUSUS LAYAR HP (MOBILE DEVICES) ---  */
-    /* ======================================================== */
     @media (max-width: 768px) {
-        /* Kurangi padding utama biar layar HP gak kerasa melompong */
         .main-container { padding-top: 6rem !important; padding-bottom: 3rem !important; }
-        
-        /* Judul utama & deskripsi disesuaikan ukurannya */
         .hero-title { font-size: 2.2rem !important; margin-bottom: 0.5rem !important; }
         .hero-desc { font-size: 1rem !important; padding: 0 1rem; margin-bottom: 2rem !important;}
-        
-        /* Tombol filter diperkecil biar muat banyak di layar HP */
-        .filter-btn { 
-            padding: 8px 16px !important; 
-            font-size: 0.85rem !important; 
-            margin-bottom: 0.25rem;
-        }
-        #kios-filters { margin-bottom: 2rem !important; }
-        
-        /* Spasi antar kategori diperkecil */
-        .category-section { margin-bottom: 3rem !important; }
-        .category-header { margin-bottom: 1.5rem !important; }
-        .category-title { font-size: 1.25rem !important; }
-
-        /* Teks lightbox disesuaikan buat HP */
-        #lightbox-title { font-size: 1.25rem !important; }
-        #lightbox-desc { font-size: 0.85rem !important; }
-        
-        /* Tombol close di lightbox dibikin lebih gampang dipencet jempol */
-        #close-lightbox { 
-            top: 1rem !important; 
-            right: 1rem !important; 
-            padding: 10px !important; 
-            background-color: rgba(0,0,0,0.5) !important; 
-            border-radius: 50%; 
-        }
+        .filter-btn { padding: 8px 16px !important; font-size: 0.85rem !important; }
     }
 </style>
 
@@ -123,16 +110,16 @@ require_once 'templates/header.php';
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
         <img id="lightbox-img" src="" class="lightbox-img rounded-xl object-contain">
-        <div class="text-center mt-4 md:mt-6 px-4" style="max-width: 800px;" onclick="event.stopPropagation()">
+        <div class="text-center mt-4 px-4" style="max-width: 800px;" onclick="event.stopPropagation()">
             <h3 id="lightbox-title" class="font-cinzel font-bold text-white text-2xl mb-2 tracking-wider"></h3>
-            <p id="lightbox-desc" class="text-white/70 text-base md:text-lg m-0"></p>
+            <p id="lightbox-desc" class="text-white/70 text-base m-0"></p>
         </div>
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 md:mt-10">
         
         <div class="text-center max-w-3xl mx-auto mb-10 md:mb-16 fade-in-up">
-            <h1 class="font-cinzel text-4xl md:text-5xl font-bold text-gray-900 mb-4 md:mb-6 uppercase tracking-widest hero-title">Direktori Kios</h1>
+            <h1 class="font-cinzel text-4xl md:text-5xl font-bold text-gray-900 mb-4 uppercase tracking-widest hero-title">Direktori Kios</h1>
             <p class="text-lg text-gray-600 hero-desc">Temukan ragam UMKM, kuliner lokal, dan produk kerajinan di kawasan Citra Niaga.</p>
         </div>
 
@@ -225,17 +212,14 @@ require_once 'templates/header.php';
 
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                
                 filterBtns.forEach(b => {
                     b.classList.remove('active-theme-btn');
                     b.classList.add('inactive-theme-btn');
                 });
-                
                 btn.classList.remove('inactive-theme-btn');
                 btn.classList.add('active-theme-btn');
 
                 const filterValue = btn.getAttribute('data-filter');
-
                 sections.forEach(section => {
                     if (filterValue === 'all' || section.getAttribute('data-category') === filterValue) {
                         section.style.display = 'block';
@@ -258,7 +242,6 @@ require_once 'templates/header.php';
         lightboxImg.src = img;
         lightboxTitle.textContent = title;
         lightboxDesc.textContent = desc;
-        
         lightbox.style.setProperty('display', 'flex', 'important');
         setTimeout(() => {
             lightbox.style.opacity = '1';

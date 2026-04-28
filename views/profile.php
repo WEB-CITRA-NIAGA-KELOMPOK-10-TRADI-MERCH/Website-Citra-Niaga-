@@ -9,6 +9,9 @@ $web_setting = $settingsModel->getSettings();
 $theme_color = !empty($web_setting['theme_color']) ? htmlspecialchars($web_setting['theme_color']) : '#254794';
 $font_family = !empty($web_setting['font_family']) ? htmlspecialchars($web_setting['font_family']) : 'Plus Jakarta Sans';
 
+$text_color = !empty($web_setting['text_color']) ? htmlspecialchars($web_setting['text_color']) : '#333333';
+$header_text_color = !empty($web_setting['header_text_color']) ? htmlspecialchars($web_setting['header_text_color']) : '#333333';
+
 require_once '../models/HistoryModel.php'; 
 
 $historyModel = new HistoryModel($conn);
@@ -22,10 +25,20 @@ require_once 'templates/header.php';
         --theme-color: <?= $theme_color ?>;
         --font-custom: '<?= $font_family ?>', sans-serif;
         --theme-color-light: color-mix(in srgb, var(--theme-color) 10%, white);
+        --text-color: <?= $text_color ?>;
+        --header-text-color: <?= $header_text_color ?>;
     }
 
     main {
         font-family: var(--font-custom) !important;
+    }
+
+    h1, h2, h3, .text-gray-900, .text-\[\#111827\] {
+        color: var(--header-text-color) !important;
+    }
+    
+    p, .text-gray-500, .text-gray-600 {
+        color: var(--text-color) !important;
     }
 
     .text-theme { color: var(--theme-color) !important; }
@@ -33,27 +46,14 @@ require_once 'templates/header.php';
     .bg-theme-light { background-color: var(--theme-color-light) !important; }
     .border-theme { border-color: var(--theme-color) !important; }
 
-    /* ======================================================== */
-    /* --- FIX RESPONSIVE KHUSUS LAYAR HP (MOBILE DEVICES) ---  */
-    /* ======================================================== */
     @media (max-width: 768px) {
-        /* Kurangi padding Hero Section di HP */
         .hero-section { padding-top: 6rem !important; padding-bottom: 4rem !important; }
         .hero-title { font-size: 2.25rem !important; line-height: 1.3 !important; }
-        
-        /* Naikkan sedikit box fitur biar gak terlalu jauh jaraknya */
         .feature-cards-container { margin-top: -2.5rem !important; margin-bottom: 4rem !important; }
         .feature-card { padding: 1.5rem !important; }
-        
-        /* Judul Jejak Langkah diperkecil */
         .timeline-title { font-size: 1.75rem !important; margin-bottom: 3rem !important; }
-        
-        /* PERBAIKAN ALIGNMENT TIMELINE DI HP */
-        /* Garis tengah digeser sedikit ke kiri */
         .timeline-line { left: 1.5rem !important; } 
-        /* Titik bulat disejajarkan pas di tengah garis (1.5rem) */
         .timeline-dot { left: 1rem !important; margin-top: 1.5rem !important; } 
-        /* Padding konten disesuaikan biar gak tabrakan sama garis */
         .timeline-content { padding-left: 3.5rem !important; }
         .timeline-card { padding: 1.5rem !important; }
     }

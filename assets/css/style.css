@@ -122,22 +122,16 @@ body {
     cursor: grabbing;
 }
 
-/* ======================================================== */
-/* --- FIX RESPONSIVE KHUSUS LAYAR HP (MOBILE DEVICES) ---  */
-/* ======================================================== */
 @media (max-width: 768px) {
-    /* Padding kartu dikurangin biar konten lebih lega di layar sempit */
     .custom-card {
         padding: 1.25rem !important; 
         border-radius: 16px !important;
     }
 
-    /* Timeline digeser biar garisnya nggak mepet banget ke pinggir kiri */
     .timeline {
         padding-left: 1.5rem !important;
     }
 
-    /* Ukuran badge angka tahun dikecilin biar nggak ngelewatin batas layar HP */
     .timeline-badge {
         left: -2.2rem !important; 
         width: 38px !important;
@@ -145,12 +139,10 @@ body {
         font-size: 0.75rem !important;
     }
 
-    /* Spasi huruf Cinzel dirapatkan sedikit di HP biar teksnya nggak patah */
     .font-cinzel {
         letter-spacing: 0.05em !important;
     }
     
-    /* Carousel (kalau ada) ujung-ujungnya dibikin lebih melengkung di HP */
     .carousel-inner {
         border-radius: 1rem !important;
     }

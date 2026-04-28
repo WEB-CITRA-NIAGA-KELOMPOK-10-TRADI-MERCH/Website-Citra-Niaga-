@@ -2,14 +2,15 @@
 require_once '../config/koneksi.php';
 /** @var mysqli $conn */
 
-// === PANGGIL PENGATURAN CMS ===
 require_once '../models/SettingsModel.php'; 
 $settingsModel = new SettingsModel($conn);
 $web_setting = $settingsModel->getSettings(); 
 
 $theme_color = !empty($web_setting['theme_color']) ? htmlspecialchars($web_setting['theme_color']) : '#254794';
 $font_family = !empty($web_setting['font_family']) ? htmlspecialchars($web_setting['font_family']) : 'Plus Jakarta Sans';
-// ===============================
+
+$text_color = !empty($web_setting['text_color']) ? htmlspecialchars($web_setting['text_color']) : '#333333';
+$header_text_color = !empty($web_setting['header_text_color']) ? htmlspecialchars($web_setting['header_text_color']) : '#333333';
 
 require_once '../models/GalleryModel.php'; 
 $galleryModel = new GalleryModel($conn);
@@ -39,23 +40,35 @@ require_once 'templates/header.php';
 ?>
 
 <style>
-    /* ========================================== */
-    /* SIHIR CSS DINAMIS NGIKUTIN DASHBOARD       */
-    /* ========================================== */
     :root {
         --theme-color: <?= $theme_color ?>;
         --font-custom: '<?= $font_family ?>', sans-serif;
+        --text-color: <?= $text_color ?>;
+        --header-text-color: <?= $header_text_color ?>;
     }
 
     main {
         font-family: var(--font-custom) !important;
     }
 
+    main h1, main h2, main h3, main .text-gray-900 {
+        color: var(--header-text-color) !important;
+    }
+    
+    main p:not(.text-white\/70), main .text-gray-600, main .text-gray-500 {
+        color: var(--text-color) !important;
+    }
+
+    main .group h3 { color: var(--header-text-color) !important; transition: color 0.3s; }
+    main .group:hover h3, main .group:hover .group-hover\:text-theme { color: var(--theme-color) !important; }
+
+    main .text-white { color: #ffffff !important; }
+    main .text-white\/70 { color: rgba(255, 255, 255, 0.7) !important; }
+
     .text-theme { color: var(--theme-color) !important; }
     .bg-theme { background-color: var(--theme-color) !important; }
     .border-theme { border-color: var(--theme-color) !important; }
     
-    /* Tombol Filter Dinamis */
     .active-theme-btn {
         background-color: var(--theme-color) !important;
         border-color: var(--theme-color) !important;
@@ -65,15 +78,12 @@ require_once 'templates/header.php';
     .inactive-theme-btn {
         background-color: #ffffff !important;
         border-color: #e5e7eb !important;
-        color: #4b5563 !important;
+        color: var(--text-color) !important; 
     }
     .inactive-theme-btn:hover {
         border-color: var(--theme-color) !important;
         color: var(--theme-color) !important;
     }
-
-    /* Hover Dinamis */
-    .group:hover .group-hover\:text-theme { color: var(--theme-color) !important; }
     
     .gradient-overlay {
         background: linear-gradient(to top, var(--theme-color), transparent);
@@ -96,29 +106,21 @@ require_once 'templates/header.php';
         transition: transform 0.3s ease;
     }
 
-    /* ======================================================== */
-    /* --- FIX RESPONSIVE KHUSUS LAYAR HP (MOBILE DEVICES) ---  */
-    /* ======================================================== */
     @media (max-width: 768px) {
-        /* Jarak atas bawah dikurangin biar gak terlalu kosong di HP */
         .main-container { padding-top: 6rem !important; padding-bottom: 3rem !important; }
         
-        /* Judul utama disesuaikan ukurannya */
         .hero-title { font-size: 2.2rem !important; margin-bottom: 0.5rem !important; }
         .hero-desc { font-size: 1rem !important; padding: 0 1rem; }
         
-        /* Tombol filter diperkecil padding & font-nya biar muat di layar HP */
         .filter-btn { 
             padding: 8px 16px !important; 
             font-size: 0.85rem !important; 
             margin-bottom: 0.25rem;
         }
         
-        /* Lightbox text disesuaikan */
         #lightbox-title { font-size: 1.25rem !important; }
         #lightbox-desc { font-size: 0.85rem !important; }
         
-        /* Tombol close lightbox diperbesar area kliknya buat jempol */
         #close-lightbox { 
             top: 1rem !important; 
             right: 1rem !important; 
@@ -127,7 +129,6 @@ require_once 'templates/header.php';
             border-radius: 50%; 
         }
 
-        /* Jarak antar judul kategori dan foto diperkecil */
         .category-header { margin-bottom: 1.5rem !important; }
         .category-title { font-size: 1.25rem !important; }
     }
@@ -216,13 +217,11 @@ require_once 'templates/header.php';
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 
-                // Reset semua class ke inactive
                 filterBtns.forEach(b => {
                     b.classList.remove('active-theme-btn');
                     b.classList.add('inactive-theme-btn');
                 });
                 
-                // Beri class active ke tombol yg diklik
                 btn.classList.remove('inactive-theme-btn');
                 btn.classList.add('active-theme-btn');
 

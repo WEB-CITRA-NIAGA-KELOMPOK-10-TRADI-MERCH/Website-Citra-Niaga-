@@ -9,16 +9,12 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 require_once '../../config/koneksi.php';
 /** @var mysqli $conn */ 
 
-// === PANGGIL PENGATURAN CMS BIAR DASHBOARD DINAMIS ===
 require_once '../../models/SettingsModel.php'; 
 $settingsModel = new SettingsModel($conn);
 $web_setting = $settingsModel->getSettings(); 
-
-// PENTING: Panggil admin_theme_color & admin_sidebar_color biar pisah total dari warna publik!
 $theme_color = !empty($web_setting['admin_theme_color']) ? htmlspecialchars($web_setting['admin_theme_color']) : '#2563eb';
 $sidebar_color = !empty($web_setting['admin_sidebar_color']) ? htmlspecialchars($web_setting['admin_sidebar_color']) : '#1e293b';
 $font_family = !empty($web_setting['font_family']) ? htmlspecialchars($web_setting['font_family']) : 'Plus Jakarta Sans';
-// ======================================================
 
 $total_kios = 0;
 $query_kios = @mysqli_query($conn, "SELECT COUNT(*) as total FROM kios");
@@ -82,7 +78,6 @@ if ($query_traffic_pages) {
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Lora:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* SIHIR CSS DINAMIS UNTUK DASHBOARD ADMIN */
         :root {
             --theme-color: <?= $theme_color ?>;
             --sidebar-color: <?= $sidebar_color ?>;
@@ -99,8 +94,6 @@ if ($query_traffic_pages) {
         .text-theme { color: var(--theme-color) !important; }
         .bg-sidebar { background-color: var(--sidebar-color) !important; }
         .shadow-theme { box-shadow: 0 10px 15px -3px var(--theme-shadow) !important; }
-        
-        /* CLASS KHUSUS AKSES CEPAT BIAR GAK HARDCODING PELANGI LAGI */
         .bg-theme-light { background-color: var(--theme-light) !important; }
         .border-theme-light { border-color: var(--theme-border-light) !important; }
         .hover-bg-theme-light:hover { background-color: color-mix(in srgb, var(--theme-color) 15%, white) !important; }
@@ -380,7 +373,6 @@ if ($query_traffic_pages) {
     <script>
         lucide.createIcons();
 
-        // JS BUKA TUTUP SIDEBAR HP
         function toggleSidebar() {
             const sidebar = document.getElementById('main-sidebar');
             const overlay = document.getElementById('sidebar-overlay');
@@ -443,7 +435,6 @@ if ($query_traffic_pages) {
             options: commonOptions
         });
 
-        // GRAFIK REVIEW JUGA IKUTAN DINAMIS WARNANYA!
         const themeColorHex = '<?= $theme_color ?>';
         const ctxReview = document.getElementById('reviewChart').getContext('2d');
         new Chart(ctxReview, {

@@ -7,14 +7,13 @@ $settingsModel = new SettingsModel($conn);
 $web_setting = $settingsModel->getSettings(); 
 
 $theme_color = !empty($web_setting['theme_color']) ? htmlspecialchars($web_setting['theme_color']) : '#254794';
+$font_family = !empty($web_setting['font_family']) ? htmlspecialchars($web_setting['font_family']) : 'Plus Jakarta Sans';
 $site_title  = !empty($web_setting['site_title']) ? htmlspecialchars($web_setting['site_title']) : 'Citra Niaga Samarinda';
 $site_desc   = !empty($web_setting['site_desc']) ? htmlspecialchars($web_setting['site_desc']) : 'Pusat UMKM, kuliner, dan budaya di Samarinda.';
 $hero_banner = !empty($web_setting['hero_banner']) ? htmlspecialchars($web_setting['hero_banner']) : 'citraniagabackground.png';
 
-// === PANGGIL WARNA TEKS DINAMIS DARI DATABASE ===
 $text_color = !empty($web_setting['text_color']) ? htmlspecialchars($web_setting['text_color']) : '#64748b';
 $header_text_color = !empty($web_setting['header_text_color']) ? htmlspecialchars($web_setting['header_text_color']) : '#0f172a';
-// ================================================
 
 $limitedReviews = [];
 $q_rev = mysqli_query($conn, "SELECT * FROM reviews WHERE is_pinned = 1 ORDER BY created_at DESC LIMIT 3");
@@ -60,20 +59,28 @@ require_once 'templates/header.php';
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 
+<script>
+    if (sessionStorage.getItem("citraNiagaLoaded")) {
+        document.documentElement.classList.add("skip-preloader");
+    }
+</script>
+
 <style>
     :root {
         --theme-color: <?= $theme_color ?>;
         --text-color: <?= $text_color ?>;
         --header-text-color: <?= $header_text_color ?>;
+        --font-custom: '<?= $font_family ?>', sans-serif;
     }
 
-    /* =================================================== */
-    /* SIHIR OVERRIDE WARNA TEKS (Nggak perlu ganti class) */
-    /* =================================================== */
+    body, main { font-family: var(--font-custom) !important; }
+    
     p, .text-secondary, .text-muted, body { color: var(--text-color) !important; }
     h1, h2, h3, h4, h5, h6, .text-dark, .font-cinzel { color: var(--header-text-color) !important; }
     
-    /* Pengecualian Elemen Biar Gak Rusak */
+    .text-theme { color: var(--theme-color) !important; }
+    .bg-theme { background-color: var(--theme-color) !important; }
+
     .text-white, .btn.text-white, .text-white-force { color: #ffffff !important; }
     .text-white-50 { color: rgba(255, 255, 255, 0.7) !important; }
     .preloader-title { color: var(--header-text-color) !important; }
@@ -111,6 +118,13 @@ require_once 'templates/header.php';
         background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
         display: flex; align-items: center; justify-content: center;
         transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s, transform 0.8s ease;
+    }
+
+    html.skip-preloader .fixed-preloader {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        animation: none !important;
     }
 
     .preloader-logo {
@@ -152,33 +166,19 @@ require_once 'templates/header.php';
 
     .fixed-preloader.hide-preloader { opacity: 0; visibility: hidden; pointer-events: none; transform: scale(1.03); }
 
-    /* ======================================================== */
-    /* --- FIX RESPONSIVE KHUSUS LAYAR HP (MOBILE DEVICES) ---  */
-    /* ======================================================== */
     .hero-content-box { margin-top: -6rem; }
     .sejarah-img-box { height: 400px; }
     .hero-title-text { font-size: clamp(3rem, 6vw, 4.5rem); }
     
     @media (max-width: 768px) {
-        /* Margin Hero dihapus di HP biar gak nabrak header */
         .hero-content-box { margin-top: 0 !important; padding-top: 3rem !important; }
-        
-        /* Tinggi gambar sejarah disusutkan biar gak makan layar */
         .sejarah-img-box { height: 260px !important; }
-        
-        /* Teks Preloader dirapetin biar gak turun ke bawah */
         .preloader-title { font-size: 1.5rem !important; letter-spacing: 4px !important; }
         .preloader-subtitle { font-size: 0.75rem !important; letter-spacing: 8px !important; }
-        
-        /* Tombol CTA diubah jadi full width di HP */
         .cta-buttons-container { flex-direction: column !important; width: 100%; }
         .cta-buttons-container a { width: 100%; justify-content: center; margin-bottom: 10px; }
-        
-        /* Teks judul hero disesuaikan */
         .hero-title-text { font-size: 2.2rem !important; line-height: 1.2; text-align: center; }
         .hero-desc-text { text-align: center; font-size: 1rem !important; margin-left: auto; margin-right: auto; }
-        
-        /* Label lokasi dibikin rata tengah */
         .hero-location-badge { margin: 0 auto 1.5rem auto !important; display: flex !important; width: fit-content; }
     }
 </style>
@@ -195,22 +195,25 @@ require_once 'templates/header.php';
 </div>
 
 <script>
+    if (!sessionStorage.getItem("citraNiagaLoaded")) {
+        document.body.classList.add("body-locked");
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
         const preloader = document.getElementById("cinematic-preloader");
+        
         if (!sessionStorage.getItem("citraNiagaLoaded")) {
-            document.body.classList.add("body-locked");
             setTimeout(() => {
                 preloader.classList.add("hide-preloader");
                 document.body.classList.remove("body-locked");
                 sessionStorage.setItem("citraNiagaLoaded", "true");
+                setTimeout(() => { preloader.style.display = "none"; }, 800);
             }, 3000); 
-        } else {
-            preloader.style.display = "none";
         }
     });
 </script>
 
-<main id="app" v-cloak class="w-100 bg-white font-plus-jakarta-sans">
+<main id="app" v-cloak class="w-100 bg-white">
     
     <transition name="fade">
         <div v-if="lightbox.show" class="lightbox-overlay" @click="closeLightbox">
@@ -245,7 +248,7 @@ require_once 'templates/header.php';
                     
                     <div class="d-inline-flex align-items-center gap-2 px-4 py-2 rounded-pill mb-4 backdrop-blur-sm border shadow-sm fade-in-up hero-location-badge">
                         <i data-lucide="map-pin" style="width: 16px; height: 16px; color: <?= $theme_color ?>;"></i> 
-                        <span class="fw-bold" style="font-size: 0.85rem; color: #333;">Samarinda, Kalimantan Timur</span>
+                        <span class="fw-bold" style="font-size: 0.85rem; color: var(--header-text-color);">Samarinda, Kalimantan Timur</span>
                     </div>
                     
                     <h1 class="font-cinzel fw-bold text-dark mb-4 text-uppercase fade-in-up hero-title-text" style="letter-spacing: 0.05em; transition-delay: 0.1s;">
@@ -373,7 +376,7 @@ require_once 'templates/header.php';
                                 </div>
                                 <div>
                                     <h6 class="font-cinzel fw-bold mb-0 text-dark text-uppercase" style="font-size: 0.95rem;">{{ review.visitor_name }}</h6>
-                                    <small class="text-primary fw-medium d-flex align-items-center gap-1 mt-1" style="font-size: 0.75rem;">
+                                    <small class="text-theme fw-medium d-flex align-items-center gap-1 mt-1" style="font-size: 0.75rem;">
                                         <i data-lucide="badge-check" style="width: 12px; height: 12px;"></i> Pengunjung Terverifikasi
                                     </small>
                                 </div>

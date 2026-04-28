@@ -9,16 +9,13 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 require_once '../../config/koneksi.php';
 /** @var mysqli $conn */ 
 
-// === PANGGIL PENGATURAN CMS BIAR ADMIN DINAMIS ===
 require_once '../../models/SettingsModel.php'; 
 $settingsModel = new SettingsModel($conn);
 $web_setting = $settingsModel->getSettings(); 
 
-// PENTING: Panggil admin_theme_color & admin_sidebar_color
 $theme_color = !empty($web_setting['admin_theme_color']) ? htmlspecialchars($web_setting['admin_theme_color']) : '#2563eb';
 $sidebar_color = !empty($web_setting['admin_sidebar_color']) ? htmlspecialchars($web_setting['admin_sidebar_color']) : '#1e293b';
 $font_family = !empty($web_setting['font_family']) ? htmlspecialchars($web_setting['font_family']) : 'Plus Jakarta Sans';
-// ======================================================
 
 if (isset($_GET['action']) && isset($_GET['id'])) {
     $id = (int)$_GET['id'];
@@ -118,7 +115,6 @@ $top_keywords = array_slice($word_counts, 0, 6, true);
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* SIHIR CSS DINAMIS UNTUK ADMIN */
         :root {
             --theme-color: <?= $theme_color ?>;
             --sidebar-color: <?= $sidebar_color ?>;
@@ -132,21 +128,14 @@ $top_keywords = array_slice($word_counts, 0, 6, true);
         .font-cinzel { font-family: 'Cinzel', serif !important; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         #notification-alert { transition: opacity 0.5s ease, transform 0.5s ease; }
-
-        /* CLASS DINAMIS */
         .bg-theme { background-color: var(--theme-color) !important; }
         .text-theme { color: var(--theme-color) !important; }
         .bg-sidebar { background-color: var(--sidebar-color) !important; }
         .shadow-theme { box-shadow: 0 10px 15px -3px var(--theme-shadow) !important; }
-        .border-theme { border-color: var(--theme-color) !important; }
-        
+        .border-theme { border-color: var(--theme-color) !important; }      
         .bg-theme-light { background-color: var(--theme-light) !important; }
         .border-theme-light { border-color: var(--theme-border-light) !important; }
         .hover-bg-theme-light:hover { background-color: color-mix(in srgb, var(--theme-color) 15%, white) !important; }
-
-        /* ======================================================== */
-        /* --- FIX RESPONSIVE KHUSUS LAYAR HP (MOBILE DEVICES) ---  */
-        /* ======================================================== */
         @media (max-width: 768px) {
             .filter-btn { padding: 8px 14px !important; font-size: 0.75rem !important; }
         }
@@ -438,7 +427,6 @@ $top_keywords = array_slice($word_counts, 0, 6, true);
     <script>
         lucide.createIcons();
 
-        // JS BUKA TUTUP SIDEBAR HP
         function toggleSidebar() {
             const sidebar = document.getElementById('main-sidebar');
             const overlay = document.getElementById('sidebar-overlay');

@@ -335,20 +335,32 @@ Menyimpan ulasan dari pengunjung.
 
 ---
 
-### 7. settings  
-Menyimpan pengaturan website.
+### 7. settings
+Menyimpan pengaturan website seperti identitas situs, tampilan tema, serta informasi kontak yang digunakan pada halaman website.
 
 | Field | Tipe Data | Keterangan |
 |------|----------|-----------|
 | id | int | ID pengaturan |
 | site_title | varchar | judul website |
-| site_desc | text | deskripsi |
-| hero_banner | varchar | banner |
-| theme_color | varchar | warna tema |
+| site_desc | text | deskripsi website |
+| hero_banner | varchar | banner halaman utama |
+| theme_color | varchar | warna tema website |
+| admin_theme_color | varchar | warna tema halaman admin |
+| admin_sidebar_color | varchar | warna sidebar admin |
+| admin_sidebar_text_color | varchar | warna teks sidebar admin |
+| admin_text_color | varchar | warna teks pada halaman admin |
+| seo_keywords | text | kata kunci SEO website |
 | contact_phone | varchar | nomor kontak |
-| contact_email | varchar | email |
-| contact_address | text | alamat |
-
+| contact_email | varchar | email website |
+| contact_ig | varchar | akun Instagram |
+| contact_github | varchar | link GitHub |
+| contact_address | varchar | alamat lengkap |
+| header_color | varchar | warna header website |
+| footer_color | varchar | warna footer website |
+| text_color | varchar | warna teks utama website |
+| font_family | varchar | jenis font website |
+| header_text_color | varchar | warna teks header |
+| footer_text_color | varchar | warna teks footer |
 ---
 
 ### 8. visitors  
